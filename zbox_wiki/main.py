@@ -425,7 +425,7 @@ def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
     full_path = req_path_to_full_path(req_path)
 
     if conf.button_mode_path:
-        buf = commons.text_path2btns_path("/%s" % req_path)
+        buf = commons.text_path2button_path("/%s" % req_path)
         button_path = commons.md2html(buf)
     else:
         button_path = None
@@ -485,7 +485,7 @@ def wp_edit(req_path):
     full_path = req_path_to_full_path(req_path)
 
     if conf.button_mode_path:
-        buf = commons.text_path2btns_path("/%s" % req_path)
+        buf = commons.text_path2button_path("/%s" % req_path)
         title = commons.md2html(buf)
     else:
         title = req_path
@@ -651,7 +651,7 @@ def wp_get_all_pages(show_full_path, limit, offset):
     all_lines = buf.split()
     total_lines = len(all_lines)
 
-    title = "ALl Pages List (%d/%d)" % (offset, total_lines / limit)
+    title = "All Pages List (%d/%d)" % (offset, total_lines / limit)
 
     start = offset * limit
     end = start + limit

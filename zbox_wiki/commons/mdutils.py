@@ -18,7 +18,7 @@ import md_table
 import markdown
 
 __all__ = [
-    "text_path2btns_path",
+    "text_path2button_path",
     "md2html",
 ]
 
@@ -182,7 +182,7 @@ def path2hierarchy(path):
 
     return caches
 
-def text_path2btns_path(path):
+def text_path2button_path(path):
     buf = path2hierarchy(path)
     IS_ONLY_ONE_LEVEL = len(buf) == 1
     button_path = " / ".join(["[%s](%s/)" % (i[0], i[1]) for i in buf[:-1]])
