@@ -222,8 +222,8 @@ def req_path_to_full_path(req_path, pages_path = conf.pages_path):
             return path_md
         else:
             path_markdown = "%s.markdown" % os.path.join(pages_path, req_path)
-            assert os.path.exists(path_markdown)
-            return path_markdown
+            if os.path.exists(path_markdown):
+                return path_markdown
     elif req_path == "/":
         return pages_path
     else:
@@ -438,7 +438,10 @@ def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
     else:
         button_path = None
 
-    if os.path.isfile(full_path):
+    if not full_path:
+        return web.seeother("~all")
+
+    elif os.path.isfile(full_path):
         work_full_path = os.path.dirname(full_path)
         static_file_prefix = os.path.join("/static/pages", os.path.dirname(req_path))
 
