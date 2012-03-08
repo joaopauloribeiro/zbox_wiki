@@ -145,7 +145,8 @@ def get_page_file_list_by_req_path(req_path, sort_by_modified_ts = False, max_de
     else:
         req_path = web.utils.strips(req_path, "/")
 
-    cmd = " cd %s; find %s -name '*.md' \! -name '.index.md' " % (conf.pages_path, req_path)
+    cmd = " cd %s; find %s -name '*.md' -or -name '*.markdown' \! -name '.index.md' " % \
+          (conf.pages_path, req_path)
 
     if max_depth is not None:
         cmd += " -maxdepth %d " % max_depth
@@ -216,7 +217,13 @@ def req_path_to_full_path(req_path, pages_path = conf.pages_path):
     '/zbox-wiki/' -> '$PAGE_PATH/zbox-wiki/'
     """
     if not req_path.endswith("/"):
-        return "%s.md" % os.path.join(pages_path, req_path)
+        path_md = "%s.md" % os.path.join(pages_path, req_path)
+        if os.path.exists(path_md):
+            return path_md
+        else:
+            path_markdown = "%s.markdown" % os.path.join(pages_path, req_path)
+            assert os.path.exists(path_markdown)
+            return path_markdown
     elif req_path == "/":
         return pages_path
     else:
@@ -231,6 +238,7 @@ def sequence_to_unorder_list(seq, show_full_path):
     for i in seq:
         i = web.utils.strips(i, "./")
         stripped_name = web.utils.strips(i, ".md")
+        stripped_name = web.utils.strips(i, ".markdown")
 
         name, url = stripped_name, "/" + stripped_name
         if not show_full_path:
@@ -264,21 +272,21 @@ def search_by_filename_and_file_content(keywords,
     if is_multiple_keywords:
         find_by_filename_cmd = " cd %s; "\
                                " find . \( -name %s \) -type f | " \
-                               " grep '.md$' | head -n %d " % \
+                               " grep -E '(.md$|.markdown$)' | head -n %d " % \
                                (conf.pages_path, find_by_filename_matched, limit)
 
         find_by_content_cmd = " cd %s; " \
-                              " grep ./ --recursive --ignore-case --include='*.md' --regexp ' \(%s\) ' | " \
+                              " grep ./ --recursive --ignore-case --include=*.{md,markdown} --regexp ' \(%s\) ' | " \
                               " awk -F ':' '{print $1}' | uniq | head -n %d " % \
                               (conf.pages_path, find_by_content_matched, limit)
     else:
         find_by_filename_cmd = " cd %s; " \
                                " find . -name %s -type f | " \
-                               " grep '.md$' | head -n %d " % \
+                               " grep -E '(.md$|.markdown$)' | head -n %d " % \
                                (conf.pages_path, find_by_filename_matched, limit)
 
         find_by_content_cmd = " cd %s; " \
-                              " grep ./ --recursive --ignore-case --include='*.md' --regexp '%s' | " \
+                              " grep ./ --recursive --ignore-case --include=*.{md,markdown} --regexp '%s' | " \
                               " awk -F ':' '{print $1}' | uniq | head -n %d " % \
                               (conf.pages_path, find_by_content_matched, limit)
 
@@ -548,7 +556,8 @@ def wp_stat():
 | Folder | %d |
 
 """
-    page_count = commons.run(" cd %s ; find . -type f -name '*.md' | wc -l " % conf.pages_path) or 0
+    page_count = commons.run(" cd %s ; find . -type f -name '*.md' -or -name '*.markdown' | wc -l " %
+                             conf.pages_path) or 0
     folder_count = commons.run(" cd %s ; find . -type d | wc -l " % conf.pages_path) or 0
     text = stat_tpl % (int(page_count), int(folder_count))
     content = commons.md2html(text)

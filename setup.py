@@ -8,7 +8,7 @@ kwargs = dict(
     description = short_desc,
     long_description = "ZBox Wiki is %s, it's easy to use, easy to read and easy to extend." % short_desc,
 
-    version = "201201",
+    version = "201203",
 
     author = "Shuge Lee",
     author_email = "shuge.lee@gmail.com",
@@ -69,11 +69,6 @@ kwargs = dict(
     scripts = [
         "zbox_wiki/scripts/zwadmin.py",
         "zbox_wiki/scripts/zwd.py",
-    ],
-
-    install_requires = [
-        # "markdown>=2.1.0",  there is a copy of Markdown in zbox_wiki/commons/markdown
-        # "argparse>=1.2.1",  there is a copy of argparse in zbox_wiki/commons/argparse
     ],
 )
 
