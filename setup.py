@@ -35,8 +35,8 @@ kwargs = dict(
         "Topic :: Software Development :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Site Management",
         "Topic :: Text Processing",
-        "Topic :: Text Processing :: Filters"
-        "Topic :: Text Processing :: Markup :: HTML"
+        "Topic :: Text Processing :: Filters",
+        "Topic :: Text Processing :: Markup :: HTML",
         ],
 
 
