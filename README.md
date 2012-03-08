@@ -7,6 +7,9 @@ install it
 
     git clone git://github.com/shuge/zbox_wiki.git
     cd zbox_wiki
+    git submodule init
+    git submodule update
+
     sudo python setup.py
 
     zwadmin.py create /tmp/my_instance
