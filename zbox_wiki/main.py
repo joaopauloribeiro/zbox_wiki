@@ -237,8 +237,8 @@ def sequence_to_unorder_list(seq, show_full_path):
     lis = []
     for i in seq:
         i = web.utils.strips(i, "./")
-        stripped_name = web.utils.strips(i, ".md")
-        stripped_name = web.utils.strips(i, ".markdown")
+        stripped_name = web.utils.rstrips(i, ".md")
+        stripped_name = web.utils.rstrips(stripped_name, ".markdown")
 
         name, url = stripped_name, "/" + stripped_name
         if not show_full_path:
