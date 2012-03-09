@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import codecs
 import os
+import sys
 import shlex
 import subprocess
 import web
@@ -19,10 +20,18 @@ def cat(*args):
         full_path = web.safeunicode(i)
         if os.path.isfile(full_path):
             f = file(full_path)
-            buf = "%s%s" % (buf, f.read().strip())
+            buf += f.read().strip()
             f.close()
 
-    return web.safeunicode(buf)
+    try:
+        buf = web.safeunicode(buf)
+    except UnicodeDecodeError:
+        msg = "expected %s file(s) in unicode, got un-know encoding" % ", ".join(args)
+        sys.stderr.write("\n" + msg + "\n")
+        buf = u""
+
+    return buf
+
 
 def strip_bom(text):
     if web.safestr(text[0]) == codecs.BOM_UTF8:
