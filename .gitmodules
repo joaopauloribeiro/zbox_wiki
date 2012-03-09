@@ -1,3 +1,0 @@
-[submodule "zbox_wiki/web"]
-	path = zbox_wiki/web
-	url = git@github.com:shuge/webpy.git
