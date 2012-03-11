@@ -159,7 +159,8 @@ def get_page_file_list_by_req_path(req_path, sort_by_modified_ts = False, max_de
         cmd += " | head -n %d " % limit
 
     msg = ">>> " + cmd
-    # sys.stdout.write("\n" + msg + "\n")
+    if web.config.debug:
+        print msg
 
     buf = os.popen(cmd).read().strip()
 
@@ -293,11 +294,11 @@ def search_by_filename_and_file_content(keywords,
 
     if web.config.debug:
         msg = "find by filename >>> " + find_by_filename_cmd
-        # sys.stdout.write("\n" + msg + "\n")
+        print msg
 
     if web.config.debug:
         msg = "find by content >>> " + find_by_content_cmd
-        # sys.stdout.write("\n" + msg + "\n")
+        print msg
 
 
     matched_content_lines = os.popen(find_by_content_cmd).read().strip()
