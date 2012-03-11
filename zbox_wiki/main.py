@@ -5,7 +5,6 @@ import functools
 import os
 import re
 import shutil
-import sys
 import time
 import web
 
@@ -14,6 +13,7 @@ try:
     import conf
 except ImportError:
     import default_conf as conf
+
 
 __all__ = [
     "app",
