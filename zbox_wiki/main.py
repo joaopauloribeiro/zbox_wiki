@@ -5,15 +5,15 @@ import functools
 import os
 import re
 import shutil
-import sys
 import time
-import web
 
-import commons
 try:
     import conf
 except ImportError:
     import default_conf as conf
+
+import commons
+from commons import web
 
 __all__ = [
     "app",
