@@ -441,7 +441,7 @@ def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
         button_path = None
 
     if not full_path:
-        return web.seeother("~all")
+        return web.seeother("/~all")
 
     elif os.path.isfile(full_path):
         work_full_path = os.path.dirname(full_path)
