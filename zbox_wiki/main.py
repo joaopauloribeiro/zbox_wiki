@@ -146,11 +146,13 @@ def get_page_file_list_by_req_path(req_path, sort_by_modified_ts = False, max_de
     else:
         req_path = web.utils.strips(req_path, "/")
 
-    cmd = " cd %s; find %s -name '*.md' -or -name '*.markdown' \! -name '.index.md' " % \
+    cmd = " cd %s; find %s -name '*.md' -or -name '*.markdown'  " % \
           (conf.pages_path, req_path)
 
     if max_depth is not None:
         cmd += " -maxdepth %d " % max_depth
+
+    cmd += " | grep -v  -E '(.index.md|.index.markdown)' "        
 
     if sort_by_modified_ts:
         cmd += " | xargs ls -t "
@@ -213,23 +215,41 @@ def get_the_same_folders_cssjs_files(req_path):
 
     return "%s\n    %s" % (css_buf, js_buf)
 
+
 def req_path_to_full_path(req_path, pages_path = conf.pages_path):
     """
-    '/zbox-wiki/about-zboxwiki' -> '$PAGE_PATH/zbox-wiki/about-zboxwiki.md'
-    '/zbox-wiki/' -> '$PAGE_PATH/zbox-wiki/'
+    >>> pages_path = "/tmp/pages/"
+    >>> req_path_to_full_path("sandbox1", pages_path)
+    '/tmp/pages/sandbox1.md'
+    
+    >>> req_path_to_full_path("sandbox1/", pages_path)
+    '/tmp/pages/sandbox1/'
+    
+    >>> req_path_to_full_path("hacking/fetion/fetion-protocol/", pages_path)
+    '/tmp/pages/hacking/fetion/fetion-protocol/'
+    
+    >>> req_path_to_full_path("hacking/fetion/fetion-protocol/method-option.md", pages_path)
+    '/tmp/pages/hacking/fetion/fetion-protocol/method-option.md'
     """
+
+    req_path = web.rstrips(req_path, ".md")
+    req_path = web.rstrips(req_path, ".markdown")
+    
     if not req_path.endswith("/"):
         path_md = "%s.md" % os.path.join(pages_path, req_path)
+        path_markdown = "%s.markdown" % os.path.join(pages_path, req_path)
+        
         if os.path.exists(path_md):
             return path_md
+        elif os.path.exists(path_markdown):
+            return path_markdown
         else:
-            path_markdown = "%s.markdown" % os.path.join(pages_path, req_path)
-            if os.path.exists(path_markdown):
-                return path_markdown
+            return path_md
     elif req_path == "/":
         return pages_path
     else:
         return os.path.join(pages_path, req_path)
+
 
 def sequence_to_unorder_list(seq, show_full_path):
     """
@@ -440,10 +460,8 @@ def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
     else:
         button_path = None
 
-    if not full_path:
-        return web.seeother("/~all")
 
-    elif os.path.isfile(full_path):
+    if os.path.isfile(full_path):
         work_full_path = os.path.dirname(full_path)
         static_file_prefix = os.path.join("/static/pages", os.path.dirname(req_path))
 
