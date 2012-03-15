@@ -24,6 +24,7 @@ $def with (conf, button_path = None, content = "", req_path = None, static_files
         <a href="/~recent">Recent Changes</a>
         <a href="/~all">All</a>
         <a href="/~settings">Settings</a>
+        <a href="/~new">Create Page</a>
 </div>
 
 $if show_quick_links:

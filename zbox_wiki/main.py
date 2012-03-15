@@ -43,7 +43,7 @@ mapping = (
 )
 
 g_redirect_paths = ("favicon.ico", "robots.txt")
-g_special_paths = ("~all", "~recent", "~search", "~settings", "~stat")
+g_special_paths = ("~all", "~recent", "~search", "~settings", "~stat", "~new")
 
 app = web.application(mapping, globals())
 tpl_render = web.template.render(conf.templates_path)
@@ -450,6 +450,16 @@ def zw_macro2md(text, show_full_path, pages_path):
     return p_obj.sub(code_repl, text)
 
 
+def update_page_by_req_path(req_path, content):
+    full_path = req_path_to_full_path(req_path)
+                
+    if not os.path.isdir(full_path):
+        web.utils.safewrite(full_path, content.replace("\r\n", "\n"))
+    else:
+        idx_dot_md_full_path = os.path.join(full_path, ".index.md")
+        web.utils.safewrite(idx_dot_md_full_path, content.replace("\r\n", "\n"))
+
+
 def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
             show_quick_links, show_source_button):
     full_path = req_path_to_full_path(req_path)
@@ -515,12 +525,14 @@ def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
 def wp_edit(req_path):
     full_path = req_path_to_full_path(req_path)
 
-    if conf.button_mode_path:
+    if conf.button_mode_path:        
         buf = commons.text_path2button_path("/%s" % req_path)
         title = commons.md2html(buf)
     else:
-        title = req_path
+        title = req_path        
 
+    create_new = False
+    
     if os.path.isfile(full_path):
         content = commons.cat(full_path)
 
@@ -528,6 +540,7 @@ def wp_edit(req_path):
         content = get_dot_idx_content_by_full_path(full_path)
 
     elif not os.path.exists(full_path):
+        create_new = True
         content = ""
 
     else:
@@ -537,7 +550,7 @@ def wp_edit(req_path):
                             highlight = False,
                             reader_mode = False)
 
-    return tpl_render.editor(req_path, title, content, static_files=static_files)
+    return tpl_render.editor(req_path, title, content, create_new = create_new, static_files = static_files)
 
 def wp_rename(req_path):
     full_path = req_path_to_full_path(req_path)
@@ -551,6 +564,8 @@ def wp_delete(req_path):
     full_path = req_path_to_full_path(req_path)
 
     delete_page_file_by_full_path(full_path)
+    update_recent_change_cache()
+    update_all_pages_list_cache()    
 
     web.seeother("/")
     return
@@ -591,6 +606,9 @@ def wp_stat():
                              req_path = None,
                              static_files = g_global_static_files,
                              show_quick_links = False)
+
+def wp_new():    
+    return tpl_render.editor(req_path = "", title = "", content = "", create_new = True, static_files = g_global_static_files)
 
 
 def wp_view_settings():
@@ -657,7 +675,7 @@ def wp_get_recent_changes_from_cache(show_full_path, limit, offset):
                              paginator = paginator)
 
 
-def update_all_ages_list_cache():
+def update_all_pages_list_cache():
     buf = get_page_file_list_by_req_path(req_path = "~all")
 
     path = os.path.join(conf.pages_path, ".zw_all_pages_list_cache")
@@ -670,10 +688,10 @@ def get_all_pages_list_from_cache():
         stat = os.stat(path)
     
         if (time.time() - stat.st_mtime) > conf.cache_update_interval:
-            update_all_ages_list_cache()
+            update_all_pages_list_cache()
     
     else:
-        update_all_ages_list_cache()
+        update_all_pages_list_cache()
     
     buf = file(path).read()
     return web.utils.safeunicode(buf)
@@ -759,8 +777,7 @@ class WikiPage:
         content = web.utils.safestr(content)
 
         # NOTICE: if req_path == `users/`, full_path will be `/path/to/users/`,
-        # parent will be `/path/to/users`.
-
+        # parent will be `/path/to/users`.            
         full_path = req_path_to_full_path(req_path)
 
         parent = os.path.dirname(full_path)
@@ -768,11 +785,7 @@ class WikiPage:
             os.makedirs(parent)
 
         if action == "edit":
-            if not os.path.isdir(full_path):
-                web.utils.safewrite(full_path, content.replace("\r\n", "\n"))
-            else:
-                idx_dot_md_full_path = os.path.join(full_path, ".index.md")
-                web.utils.safewrite(idx_dot_md_full_path, content.replace("\r\n", "\n"))
+            update_page_by_req_path(req_path = req_path, content = content)
 
             web.seeother("/%s" % req_path)
 
@@ -798,6 +811,9 @@ class WikiPage:
                 os.makedirs(parent)
 
             shutil.move(old_full_path, new_full_path)
+
+            update_all_pages_list_cache()
+            update_recent_change_cache()
 
             if os.path.isfile(new_full_path):
                 web.seeother("/%s" % new_path)
@@ -834,14 +850,15 @@ class SpecialWikiPage:
         elif req_path == "~stat":
             return wp_stat()
 
+        elif req_path == "~new":
+            return wp_new()
+
         else:
             return web.BadRequest()
 
     @check_ip
     @check_acl
     def POST(self, req_path):
-        assert req_path in g_special_paths
-
         inputs = web.input()
             
         if req_path == "~search":
@@ -895,6 +912,19 @@ class SpecialWikiPage:
                 latest_req_path = "/"
 
             web.seeother(latest_req_path)
+        elif req_path == "~new":
+            real_req_path = inputs.get("path")
+            fixed_req_path = web.lstrips(real_req_path, "/")
+
+            content = inputs.get("content")
+            content = web.utils.safestr(content)
+        
+            update_page_by_req_path(req_path = fixed_req_path, content = content)
+
+            update_recent_change_cache()
+            update_all_pages_list_cache()    
+
+            web.seeother(real_req_path)
         else:
             raise web.NotFound()
 

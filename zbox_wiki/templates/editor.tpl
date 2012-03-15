@@ -1,4 +1,4 @@
-$def with (req_path, title, content, static_files=None)
+$def with (req_path, title, content, create_new = False, static_files=None)
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,6 +17,16 @@ $def with (req_path, title, content, static_files=None)
 
 <div id="editor">
     <form method="POST" accept-charset="utf-8">
+        <div id="path-widget">
+            $if create_new:
+                <p>Create</p> 
+                <label for="path">Path:</label>
+                <input type="text" id="path" name="path" value="$req_path" />
+            $else:
+                <p>Update path:</p>
+                <p>$req_path</p>
+        </div>
+
         <div class="input-widget">
             <label for="content">Content</label>
             <textarea cols="80" rows="20" id="content" name="content">$content</textarea>
