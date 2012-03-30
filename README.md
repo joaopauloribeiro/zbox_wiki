@@ -2,6 +2,12 @@
 
 ZBox Wiki is a lightweight wiki system write in Python.
 
+Who could like this project?
+
+ - programmer and code monkey (Python and Markdown is cool)
+ - engineer (Python and Markdown is really cool)
+ - geek, nerd and hacker (Python and Markdown is absolute cool, and fun to hack)
+
 
 install it
 
