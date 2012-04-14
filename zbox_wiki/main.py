@@ -146,7 +146,7 @@ def get_page_file_list_by_req_path(req_path, sort_by_modified_ts = False, max_de
     else:
         req_path = web.utils.strips(req_path, "/")
 
-    cmd = " cd %s; find %s -name '*.md' -or -name '*.markdown'  " % \
+    cmd = " cd %s; find %s -follow -name '*.md' -or -name '*.markdown'  " % \
           (conf.pages_path, req_path)
 
     if max_depth is not None:

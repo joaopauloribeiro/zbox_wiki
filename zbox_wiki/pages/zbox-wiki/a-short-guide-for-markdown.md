@@ -165,6 +165,15 @@ E_k = \frac{1}{2}m_0 v^2 + \cdots
 ```
 
 
+list all files of specify path
+
+
+```{{{#!zw
+ls("docs/", maxdepth=3)
+}}}
+```
+
+
 ## References
 
  - http://daringfireball.net/projects/markdown/syntax
