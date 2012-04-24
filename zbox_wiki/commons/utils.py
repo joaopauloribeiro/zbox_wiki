@@ -34,8 +34,8 @@ def cat(*args):
 
 
 def strip_bom(text):
-    if web.safestr(text[0]) == codecs.BOM_UTF8:
-        text = text[1:]
+    if web.safestr(text[:3]) == codecs.BOM_UTF8:
+        text = text[3:]
 
     return text
 
