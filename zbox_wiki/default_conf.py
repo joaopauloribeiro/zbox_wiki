@@ -27,6 +27,7 @@ highlight = 1
 
 # a.k.a. 'navigation bar' on top
 show_quick_links = 1
+show_home_link = 1
 
 button_mode_path = 1
 reader_mode = 1

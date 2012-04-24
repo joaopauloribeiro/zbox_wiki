@@ -461,7 +461,7 @@ def update_page_by_req_path(req_path, content):
 
 
 def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
-            show_quick_links, show_source_button):
+            show_quick_links, show_source_button, show_home_link):
     full_path = req_path_to_full_path(req_path)
 
     if conf.button_mode_path:
@@ -520,7 +520,8 @@ def wp_read(req_path, show_full_path, auto_toc, highlight, pages_path,
                            content = content,
                            static_files = static_files,
                            show_quick_links = show_quick_links,
-                           show_source_button = show_source_button)
+                           show_source_button = show_source_button,
+                           show_home_link = show_home_link)
 
 def wp_edit(req_path):
     full_path = req_path_to_full_path(req_path)
@@ -747,7 +748,8 @@ class WikiPage:
                            highlight = highlight,
                            pages_path = conf.pages_path,
                            show_quick_links = conf.show_quick_links,
-                           show_source_button = conf.show_source_button)
+                           show_source_button = conf.show_source_button,
+                           show_home_link = conf.show_home_link)
 
         elif action == "edit":
             return wp_edit(req_path)

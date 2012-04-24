@@ -1,4 +1,4 @@
-$def with (conf, button_path = None, content = "", req_path = None, static_files = None, show_quick_links = True, paginator = None, show_source_button = True)
+$def with (conf, button_path = None, content = "", req_path = None, static_files = None, show_quick_links = True, paginator = None, show_source_button = True, show_home_link = True)
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,15 +17,18 @@ $def with (conf, button_path = None, content = "", req_path = None, static_files
 <div id="container">
 
 
-<div id="quick_links">
-    <a href="/">Home</a>
+$if show_home_link or show_quick_links:
+    <div id="quick_links">
+        $if show_home_link:
+            <a href="/">Home</a>
 
-    $if show_quick_links:
-        <a href="/~recent">Recent Changes</a>
-        <a href="/~all">All</a>
-        <a href="/~settings">Settings</a>
-        <a href="/~new">Create Page</a>
-</div>
+        $if show_quick_links:
+            <a href="/~recent">Recent Changes</a>
+            <a href="/~all">All</a>
+            <a href="/~settings">Settings</a>
+            <a href="/~new">Create Page</a>
+    </div>
+
 
 $if show_quick_links:
     <div id="searchbox">
