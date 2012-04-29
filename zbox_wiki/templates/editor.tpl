@@ -1,4 +1,5 @@
 $def with (req_path, title, content, create_new = False, static_files=None)
+<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>

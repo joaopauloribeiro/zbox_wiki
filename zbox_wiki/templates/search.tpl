@@ -1,4 +1,5 @@
 $def with (keywords, content, static_files)
+<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>

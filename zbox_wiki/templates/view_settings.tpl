@@ -1,4 +1,5 @@
 $def with (show_full_path, auto_toc, highlight, static_files)
+<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,4 +1,5 @@
 $def with (title, err_info=None, static_files=None)
+<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>

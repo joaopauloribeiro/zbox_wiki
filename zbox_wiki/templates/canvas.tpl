@@ -1,4 +1,5 @@
-$def with (conf, button_path = None, content = "", req_path = None, static_files = None, show_quick_links = True, paginator = None, show_source_button = True, show_home_link = True)
+$def with (conf, button_path = None, content = "", req_path = None, static_files = None, show_quick_links = True, paginator = None, show_source_button = True, show_home_link = True, home_link_name = "Home")
+<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@ $def with (conf, button_path = None, content = "", req_path = None, static_files
 $if show_home_link or show_quick_links:
     <div id="quick_links">
         $if show_home_link:
-            <a href="/">Home</a>
+            <a href="/"> $home_link_name </a>
 
         $if show_quick_links:
             <a href="/~recent">Recent Changes</a>
