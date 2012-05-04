@@ -9,12 +9,10 @@ Who could like this project?
  - geek, nerd and hacker (Python and Markdown is absolute cool, and fun to hack)
 
 
-install it
+Install it
 
     git clone git://github.com/shuge/zbox_wiki.git
     cd zbox_wiki
-    git submodule init
-    git submodule update
 
     sudo python setup.py
 
@@ -22,12 +20,12 @@ install it
     cd /tmp/my_instance
 
 
-enable anyone could edit it via web frontend
+Enable anyone could edit it via web frontend
 
     sed -i -e  s/readonly\ =\ True/readonly\ =\ False/g /tmp/foo/myproj/conf.py
 
 
-run instance 
+Run the instance 
 
     zwd.py --path /tmp/foo/myproj --port 8080
     
