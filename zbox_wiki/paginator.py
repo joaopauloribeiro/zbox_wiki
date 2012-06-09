@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 import math
 
+__all__ = [
+    "Paginator",
+]
+
+
 class Paginator(object):
     def __init__(self):
         self.current_offset = 0
@@ -34,35 +39,3 @@ class Paginator(object):
     @property
     def has_next_page(self):
         return (self.current_offset * self.limit + self.limit) < self.total
-
-
-if __name__ == "__main__":
-    po = Paginator()
-    
-    po.total = 10
-    po.limit = 3
-
-    po.current_offset = 0
-    assert po.count == 4
-    assert po.has_previous_page == False
-    assert po.has_next_page == True
-
-    po.current_offset = 1
-    assert po.count == 4
-    assert po.has_previous_page == True
-    assert po.has_next_page == True
-
-    po.current_offset = 2
-    assert po.count == 4
-    assert po.has_previous_page == True
-    assert po.has_next_page == True
-
-    po.current_offset = 3
-    assert po.count == 4
-    assert po.has_previous_page == True
-    assert po.has_next_page == False
-
-
-
-
-

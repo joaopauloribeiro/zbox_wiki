@@ -3,24 +3,41 @@
 import os
 import re
 import sys
+import logging
+
+import commons
+import page
+import config_agent
+import web
+
+
+logging.getLogger("mdutils").setLevel(logging.DEBUG)
 
 try:
     import dot2png
 except ImportError:
     dot2png = None
+    logging.warn("import dot2png module failed")
 
 try:
     import tex2png
 except ImportError:
     tex2png = None
+    logging.warn("import tex2png module failed")
 
 import md_table
 import markdown
 
+
 __all__ = [
     "text_path2button_path",
     "md2html",
+    "zw_macro2md",
+    "sequence_to_unorder_list",
 ]
+
+
+config = config_agent.config
 
 
 def trac_wiki_code_block_to_md_code(text):
@@ -250,8 +267,116 @@ def test_path2hierarchy():
         links = i[1]
         assert path2hierarchy(req_path) == links
 
+
+
+def req_path_to_full_path(req_path, pages_path = None):
+    """
+    >>> pages_path = "/tmp/pages/"
+    >>> req_path_to_full_path("sandbox1", pages_path)
+    '/tmp/pages/sandbox1.md'
+
+    >>> req_path_to_full_path("sandbox1/", pages_path)
+    '/tmp/pages/sandbox1/'
+
+    >>> req_path_to_full_path("hacking/fetion/fetion-protocol/", pages_path)
+    '/tmp/pages/hacking/fetion/fetion-protocol/'
+
+    >>> req_path_to_full_path("hacking/fetion/fetion-protocol/method-option.md", pages_path)
+    '/tmp/pages/hacking/fetion/fetion-protocol/method-option.md'
+    """
+
+    req_path = web.rstrips(req_path, ".md")
+    req_path = web.rstrips(req_path, ".markdown")
+    if pages_path is None:
+        pages_path = config_agent.get_full_path("paths", "pages_path")
+
+    if not req_path.endswith("/"):
+        path_md = "%s.md" % os.path.join(pages_path, req_path)
+        path_markdown = "%s.markdown" % os.path.join(pages_path, req_path)
+
+        if os.path.exists(path_md):
+            return path_md
+        elif os.path.exists(path_markdown):
+            return path_markdown
+        else:
+            return path_md
+    elif req_path == "/":
+        return pages_path
+    else:
+        return os.path.join(pages_path, req_path)
+
+
+def get_wiki_page_title_by_req_path(req_path):
+    full_path = req_path_to_full_path(req_path)
+    buf = commons.cat(full_path)
+    if buf:
+        buf = commons.strip_bom(buf)
+
+    p = '^#\s*(?P<title>.+?)\s*$'
+    p_obj = re.compile(p, re.UNICODE | re.MULTILINE)
+    match_obj = p_obj.search(buf)
+
+    if match_obj:
+        title = match_obj.group('title')
+    elif '/' in req_path:
+        title = req_path.split('/')[-1].replace('-', ' ')
+    else:
+        title = "Untitled"
+
+    return title
+
+def sequence_to_unorder_list(seq, enable_show_full_path):
+    """
+        >>> sequence_to_unorder_list(['a','b','c'], 1)
+        u'- [a](/a)\\n- [b](/b)\\n- [c](/c)'
+    """
+    lis = []
+    for i in seq:
+        i = web.utils.strips(i, "./")
+        stripped_name = web.utils.rstrips(i, ".md")
+        stripped_name = web.utils.rstrips(stripped_name, ".markdown")
+
+        name, url = stripped_name, "/" + stripped_name
+        if not enable_show_full_path:
+            name = get_wiki_page_title_by_req_path(name)
+
+        lis.append('- [%s](%s)' % (name, url))
+
+    buf = "\n".join(lis)
+    buf = web.utils.safeunicode(buf)
+
+    return buf
+
+def zw_macro2md(text, enable_show_full_path, folder_pages_full_path):
+    shebang_p = "#!zw"
+    code_p = '(?P<code>[^\f\v]+?)'
+    code_block_p = "^\{\{\{[\s]*%s*%s[\s]*\}\}\}" % (shebang_p, code_p)
+    p_obj = re.compile(code_block_p, re.MULTILINE)
+
+    def code_repl(match_obj):
+        code = match_obj.group('code')
+        code = code.split("\n")[1]
+
+        if code.startswith("ls("):
+            p = 'ls\("(?P<path>.+?)",\s*maxdepth\s*=\s*(?P<maxdepth>\d+)\s*\)'
+            m = re.match(p, code, re.UNICODE | re.MULTILINE)
+            req_path = m.group("path")
+            full_path = os.path.join(folder_pages_full_path, req_path)
+            max_depth = int(m.group("maxdepth"))
+
+            if os.path.exists(full_path):
+                buf = page.get_page_file_list_by_req_path(req_path = req_path, max_depth = max_depth, folder_pages_full_path = folder_pages_full_path)
+                buf = sequence_to_unorder_list(buf.split("\n"), enable_show_full_path = enable_show_full_path)
+            else:
+                buf = ""
+            return buf
+        return code
+
+    return p_obj.sub(code_repl, text)
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-    test_path2hierarchy()
+#    test_path2hierarchy()

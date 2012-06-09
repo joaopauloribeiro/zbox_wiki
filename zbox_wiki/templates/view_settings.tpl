@@ -1,4 +1,4 @@
-$def with (show_full_path, auto_toc, highlight, static_files)
+$def with (enable_show_full_path, enable_auto_toc, enable_highlight, static_files)
 <!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
@@ -25,30 +25,30 @@ $def with (show_full_path, auto_toc, highlight, static_files)
         <form method="POST" action="/~settings">
 
 
-            <label for="show_full_path">show full path</label>
+            <label for="enable_show_full_path">show full path</label>
 
-            $if show_full_path:
-                <input type="checkbox" id="show_full_path" name="show_full_path" checked="checked" />
+            $if enable_show_full_path:
+                <input type="checkbox" id="enable_show_full_path" name="enable_show_full_path" checked="checked" />
             $else:
-                <input type="checkbox" id="show_full_path" name="show_full_path" />
+                <input type="checkbox" id="enable_show_full_path" name="enable_show_full_path" />
             <br />
 
 
-            <label for="auto_toc">auto <b>T</b>able <b>O</b>f <b>C</b>ontent</label>
+            <label for="enable_auto_toc">auto <b>T</b>able <b>O</b>f <b>C</b>ontent</label>
 
-            $if auto_toc:
-                <input type="checkbox" id="auto_toc" name="auto_toc" checked="checked" />
+            $if enable_auto_toc:
+                <input type="checkbox" id="enable_auto_toc" name="enable_auto_toc" checked="checked" />
             $else:
-                <input type="checkbox" id="auto_toc" name="auto_toc" />
+                <input type="checkbox" id="enable_auto_toc" name="enable_auto_toc" />
             <br />
 
 
-            <label for="highlight">highlight source code</label>
+            <label for="enable_highlight">highlight source code</label>
 
-            $if highlight:
-                <input type="checkbox" id="highlight" name="highlight" checked="checked" />
+            $if enable_highlight:
+                <input type="checkbox" id="enable_highlight" name="enable_highlight" checked="checked" />
             $else:
-                <input type="checkbox" id="highlight" name="highlight" />
+                <input type="checkbox" id="enable_highlight" name="enable_highlight" />
             <br />
 
 

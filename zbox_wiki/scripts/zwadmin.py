@@ -5,19 +5,19 @@ import shutil
 import sys
 import logging
 import hashlib
+import zbox_wiki
+
 
 logging.getLogger().setLevel(logging.INFO)
 
-import zbox_wiki
+md5 = lambda plain : hashlib.md5(plain).hexdigest()
+
 
 ZW_MOD_FULL_PATH = zbox_wiki.__path__[0]
 
-IS_UBUNTU = platform.linux_distribution()[0].lower()
-if IS_UBUNTU not in ("ubuntu", "debian"):
-    IS_UBUNTU = None
-
-
-md5 = lambda plain : hashlib.md5(plain).hexdigest()
+IS_DEB_BASED = platform.linux_distribution()[0].lower()
+if IS_DEB_BASED not in ("ubuntu", "debian"):
+    IS_DEB_BASED = None
 
 
 ZWADMIN_HELP_MSG = """
@@ -75,7 +75,7 @@ def print_zwadmin_help_msg():
     sys.stdout.write(ZWADMIN_HELP_MSG)
 
 def print_zwd_help_msg(proj_root_path):
-    if IS_UBUNTU:
+    if IS_DEB_BASED:
         msg = ZWD_UBUNTU_HELP_MSG % (proj_root_path, proj_root_path, proj_root_path)
     else:
         msg = ZWD_HELP_MSG % proj_root_path
@@ -100,7 +100,7 @@ def cp_fcgi_scripts(proj_root_path):
     os.chmod(dst, 0774)
 
 
-    if IS_UBUNTU:
+    if IS_DEB_BASED:
         conf_file_name = "nginx-debian.conf"
 
         nginx_conf_tpl = os.path.join(proj_root_path, "pages", "zbox-wiki", conf_file_name)

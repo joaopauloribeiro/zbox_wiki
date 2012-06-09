@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from __future__ import generators
-from __future__ import with_statement
+import config_agent
 
-from main import *
+from main import main
+from config_agent import *

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
-This script is inspire by Trac LatexMacro.
-
 This script requires
 
- * latex
- * dvipng
+ * latex (texlive-latex-base on Ubuntu)
+ * dvipng (dvipng on Ubuntu)
 
+Reference
+
+ - Trac LatexMacro
 """
 import os
 import shutil

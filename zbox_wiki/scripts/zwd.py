@@ -1,16 +1,21 @@
 #!/usr/bin/env python
 import os
-from zbox_wiki.commons import argparse
+from commons import argparse
 import sys
 
 
-parser = argparse.ArgumentParser(description = "run ZBox Wiki instance")
+default_port = 8080
+default_addr = "0.0.0.0"
+
+
+parser = argparse.ArgumentParser(description = "run ZBox Wiki instance", epilog = "report bug to shuge.lee AT gmail.com")
 parser.add_argument("--ip", help = "the IP address to bind to")
 parser.add_argument("--port", type = int, help = "the port number to bind to")
-parser.add_argument("--path", help = "instance full path")
+parser.add_argument("--path", help = "full path of instance")
+parser.add_argument("--test", help = "full path of configuration file")
 
 
-def check_conf_compatible_issues(sys_conf, instance_conf, proj_root_full_path):
+def check_conf_compatible_issues(sys_conf, instance_conf, instance_root_full_path):
     changes = ""
     ignore_fields = ("maintainer_email_suffix", "maintainer_email_prefix")
 
@@ -28,22 +33,28 @@ def check_conf_compatible_issues(sys_conf, instance_conf, proj_root_full_path):
         msg = "\n" \
               "Your instance's configuration file does not compatible with default's, \n" \
               "you have to upgrade your instance: \n\n" \
-              "    zwadmin.py upgrade %s \n" % proj_root_full_path
+              "    zwadmin.py upgrade %s \n" % instance_root_full_path
         print msg
 
         exit( -1 )
 
 
-def run_instance():
-    args = parser.parse_args()
+#def test_config(args):
+#    config_file_full_path = args.test
+#
+#    print "config_file_full_path = ", config_file_full_path
+#
+##    import zbox_wiki
+#    from zbox_wiki import config_agent
+#    config = config_agent.load_config(paths = [config_file_full_path])
+#
+#    print config.get("main", "repository_url")
 
-    if not args.path:
-        parser.print_help()
-        exit(0)
 
-    proj_root_full_path = os.path.realpath(args.path)
-    port = args.port or 8080
-    ip = args.ip or "0.0.0.0"
+def run_instance(args):
+    instance_root_full_path = os.path.realpath(args.path)
+    port = args.port or default_port
+    ip = args.ip or default_addr
 
     # custom web.py listen IP address and port
     # http://jarln.net/archives/972
@@ -53,35 +64,29 @@ def run_instance():
     sys.argv = fake_argv
 
 
-    # override zbox_wiki.conf and zbox_wiki.default_conf
-    for i in sys.modules.keys():
-        if i.startswith("zbox_wiki"):
-            del sys.modules[i]
+    from zbox_wiki import config_agent
+    instance_config_file_full_path = os.path.join(instance_root_full_path, "default.cfg")
+    instance_config = config_agent.load_config(paths = [instance_config_file_full_path])
+    instance_config.set("paths", "instance_full_path", instance_root_full_path)
+    config_agent.config = instance_config
 
-    sys.path.insert(0, proj_root_full_path)
-    import conf
-
-    if hasattr(conf, "error_log_path") and conf.error_log_path:
-        path = os.path.dirname(conf.error_log_path)
-        if not os.path.exists(path):
-            os.makedirs(path)
-
-        sys.stderr = file(conf.error_log_path, "a")
-
+    pages_path = config_agent.get_full_path("paths", "pages_path")
+    os.chdir(pages_path)
 
     import zbox_wiki
-    from zbox_wiki import default_conf
+    zbox_wiki.main(instance_root_full_path)
 
-    check_conf_compatible_issues(sys_conf = default_conf,
-                                 instance_conf = conf,
-                                 proj_root_full_path = proj_root_full_path)
 
-    zbox_wiki.fix_pages_path_symlink(proj_root_full_path)
+def main():
+    args = parser.parse_args()
 
-    os.chdir(conf.pages_path)
-
-    zbox_wiki.srv_start()
-
+    if args.path:
+        run_instance(args)
+#    elif args.test:
+#        test_config(args)
+    else:
+        parser.print_help()
+        exit(0)
 
 if __name__ == "__main__":
-    run_instance()
+    main()

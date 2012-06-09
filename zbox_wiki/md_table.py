@@ -164,5 +164,5 @@ def md_table2html(text):
 
 if __name__ == "__main__":
     buf = """\n\n||      \what is\ || tbl beginning   || tbl body        || tbl ending      ||\n|  previous line  |  None            |  ?               |  ?               |\n|  current line   |  startswith('|') |  startswith('|') |  startswith('|') |\n|  next line      |  ?               |  ?               |  None            |\n\n"""
-    html_buf = parse_table(buf)
+    html_buf = md_table2html(buf)
     print html_buf

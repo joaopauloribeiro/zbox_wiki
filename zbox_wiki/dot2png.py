@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 """
-This script is inspire by Trac Graphviz Plugin.
-
 This script requires
 
- * PyGraphviz
+ * PyGraphviz (python-pygraphviz on Ubuntu)
 
+References
+
+  - Trac Graphviz Plugin
 """
 import os
 import pygraphviz

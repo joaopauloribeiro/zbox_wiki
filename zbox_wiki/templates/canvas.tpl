@@ -1,4 +1,4 @@
-$def with (conf, button_path = None, content = "", req_path = None, static_files = None, show_quick_links = True, paginator = None, show_source_button = True, show_home_link = True, home_link_name = "Home")
+$def with (config, button_path = None, content = "", req_path = None, static_files = None, enable_show_quick_links = True, paginator = None, enable_show_source_button = True, enable_show_home_link = True)
 <!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
@@ -18,12 +18,13 @@ $def with (conf, button_path = None, content = "", req_path = None, static_files
 <div id="container">
 
 
-$if show_home_link or show_quick_links:
+$if enable_show_home_link or enable_show_quick_links:
     <div id="quick_links">
-        $if show_home_link:
+        $if enable_show_home_link:
+            $ home_link_name = config.get("frontend", "home_link_name")
             <a href="/"> $home_link_name </a>
 
-        $if show_quick_links:
+        $if enable_show_quick_links:
             <a href="/~recent">Recent Changes</a>
             <a href="/~all">All</a>
             <a href="/~settings">Settings</a>
@@ -31,7 +32,7 @@ $if show_home_link or show_quick_links:
     </div>
 
 
-$if show_quick_links:
+$if enable_show_quick_links:
     <div id="searchbox">
         <form method="POST" action="/~search" accept-charset="utf-8">
             <input type="text" name="k" class="auto-increase-width-size" />
@@ -57,10 +58,10 @@ $if paginator:
 
 $if req_path:
     <div id="toolbox">
-        $if show_source_button:
+        $if enable_show_source_button:
             <a href="/$req_path?action=source">Source</a>
 
-        $if not conf.readonly:
+        $if not config.getboolean("main", "readonly"):
             <a href="/$req_path?action=delete">Delete</a>
             <a href="/$req_path?action=rename">Rename</a>
             <a href="/$req_path?action=edit">Edit</a>
@@ -71,8 +72,8 @@ $if req_path:
 </div>
 
 
-$if conf.readonly and conf.maintainer_email:
-    $ email = conf.maintainer_email_prefix + '<span class="hide">null</span>@' + conf.maintainer_email_suffix
+$if config.getboolean("main", "readonly") and config.get("main", "maintainer_email"):
+    $ email = config.get("main", "maintainer_email_prefix") + '<span class="hide">null</span>@' + config.get("main", "maintainer_email_suffix")
     <footer>
         <p>
             Maintainer: $email

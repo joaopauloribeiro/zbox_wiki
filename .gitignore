@@ -10,7 +10,7 @@ ignore/
 *.egg-info/
 experimental/
 zbox_wiki/static/pages
-zbox_wiki/sessions/
+zbox_wiki/sessions/*
 zbox_wiki/pages/zbox-wiki/*.png
 zbox_wiki/pages/.zw_all_pages_list_cache
 zbox_wiki/pages/.zw_recent_changes_cache

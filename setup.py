@@ -42,16 +42,16 @@ kwargs = dict(
 
     packages = [
         "zbox_wiki",
-        "zbox_wiki.commons",
-        "zbox_wiki.commons.markdown",
-        "zbox_wiki.commons.markdown.extensions",
-        "zbox_wiki.commons.web",
-        "zbox_wiki.commons.web.contrib",
-        "zbox_wiki.commons.web.wsgiserver",
+        "zbox_wiki.markdown",
+        "zbox_wiki.markdown.extensions",
+        "zbox_wiki.web",
+        "zbox_wiki.web.contrib",
+        "zbox_wiki.web.wsgiserver",
         ],
 
     package_data = {
       "zbox_wiki" : [
+          "default.cfg",
           "pages/robots.txt",
           "pages/zbox-wiki/*.md",
           "pages/zbox-wiki/nginx-*.conf",
