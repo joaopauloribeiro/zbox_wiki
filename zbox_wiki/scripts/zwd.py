@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 import os
-from commons import argparse
 import sys
+
+from commons import argparse
 
 
 default_port = 8080
 default_addr = "0.0.0.0"
 
-
-parser = argparse.ArgumentParser(description = "run ZBox Wiki instance", epilog = "report bug to shuge.lee AT gmail.com")
+parser = argparse.ArgumentParser(description = "run ZBox Wiki instance", epilog = "Please report bug to shuge.lee <AT> GMail.")
 parser.add_argument("--ip", help = "the IP address to bind to")
 parser.add_argument("--port", type = int, help = "the port number to bind to")
 parser.add_argument("--path", help = "full path of instance")
-parser.add_argument("--test", help = "full path of configuration file")
 
 
 def check_conf_compatible_issues(sys_conf, instance_conf, instance_root_full_path):
@@ -37,19 +36,6 @@ def check_conf_compatible_issues(sys_conf, instance_conf, instance_root_full_pat
         print msg
 
         exit( -1 )
-
-
-#def test_config(args):
-#    config_file_full_path = args.test
-#
-#    print "config_file_full_path = ", config_file_full_path
-#
-##    import zbox_wiki
-#    from zbox_wiki import config_agent
-#    config = config_agent.load_config(paths = [config_file_full_path])
-#
-#    print config.get("main", "repository_url")
-
 
 def run_instance(args):
     instance_root_full_path = os.path.realpath(args.path)
@@ -77,16 +63,12 @@ def run_instance(args):
     zbox_wiki.main(instance_root_full_path)
 
 
-def main():
+if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.path:
         run_instance(args)
-#    elif args.test:
-#        test_config(args)
-    else:
-        parser.print_help()
         exit(0)
 
-if __name__ == "__main__":
-    main()
+    parser.print_help()
+
