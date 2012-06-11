@@ -1,22 +1,27 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-""" Trac Wiki to Markdown
-- http://trac.edgewall.org/wiki/TracDev/DatabaseApi
-- http://trac.edgewall.org/wiki/TracDev/DatabaseSchema
-- http://trac.edgewall.org/browser/trunk/trac/wiki/web_ui.py
-- from trac.wiki import parser
-- https://gist.github.com/619537/94091aa59bdf6d6e5ad2fbb063465b2d160156ad
+"""
+Trac Wiki to Markdown
+
+ - http://trac.edgewall.org/wiki/TracDev/DatabaseApi
+ - http://trac.edgewall.org/wiki/TracDev/DatabaseSchema
+ - http://trac.edgewall.org/browser/trunk/trac/wiki/web_ui.py
+ - from trac.wiki import parser
+ - https://gist.github.com/619537/94091aa59bdf6d6e5ad2fbb063465b2d160156ad
 
 Trac Wiki Syntax
-- http://trac.edgewall.org/wiki/WikiFormatting
+
+ - http://trac.edgewall.org/wiki/WikiFormatting
 
 Markdown Refs
-- http://daringfireball.net/projects/markdown
+
+ - http://daringfireball.net/projects/markdown
 
 Regular Expression Refs
-- http://luy.li/2010/05/12/python-re/
-- http://docs.python.org/howto/regex.html#regex-howto
+
+ - http://luy.li/2010/05/12/python-re/
+ - http://docs.python.org/howto/regex.html#regex-howto
 """
 
 import re
