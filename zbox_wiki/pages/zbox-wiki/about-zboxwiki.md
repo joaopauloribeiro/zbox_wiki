@@ -8,7 +8,7 @@ it's released under the MIT license.
 What is **the most difference** between ZBox Wiki and others?
 
  * **pythonic**, lightweigt, simple, easy to **use**, easy to **read** and easy to **extend**
- * support Markdown (with table parsing extension) syntax, [guide](markdown-in-zboxwiki)
+ * support Markdown (with table parsing extension) syntax, [guide](a-short-guide-for-markdown)
  * support button mode path
  * support simple TeX/LaTeX (requires [LaTeX] [latex] and [dvipng] [dvipng]), [demo](tex-in-zboxwiki)
  * support simple Graphviz/dot (requires [PyGraphviz] [pygraphviz]), [demo](dot-in-zboxwiki)
@@ -95,7 +95,7 @@ Install pygraphviz On Mac OS X via MacPorts
 
 Install pygraphviz (20 M +) on Debian/Ubuntu
 
-    sudo apt-get python-pygraphviz
+    sudo apt-get install python-pygraphviz
 
 
 Graphviz GUI Editors on Mac OS X in MacPorts:
@@ -114,7 +114,7 @@ Graphviz GUI Editors on Mac OS X in MacPorts:
 ## A SHORT GUIDE FOR MARKDOWN
 
 
-[A Short Guide For Markdown](markdown-in-zboxwiki)
+[A Short Guide For Markdown](a-short-guide-for-markdown)
 
 
 

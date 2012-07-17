@@ -32,7 +32,7 @@ def _check_rw(req_obj, req_path):
     action = inputs.get("action", "read")
 
     if config.getboolean("main", "readonly"):
-        if action not in ("read", "source"):
+        if (action not in ("read", "source")) or (req_path == "~new"):
             return False
 
     return True

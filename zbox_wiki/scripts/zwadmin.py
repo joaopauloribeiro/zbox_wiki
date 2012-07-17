@@ -70,7 +70,7 @@ parser.add_argument("--upgrade", help = "full path of instance")
 
 def print_zwd_help_msg(instance_full_path):
     if IS_DEB_BASED:
-        msg = zwd_help_msg_for_deb_based % (instance_full_path, instance_full_path, instance_full_path)
+        msg = zwd_help_msg_for_deb_based % (instance_full_path, instance_full_path)
     else:
         msg = zwd_help_msg % instance_full_path
 
@@ -126,15 +126,6 @@ def action_create(instance_full_path):
             continue
 
         os.mkdir(src_full_path)
-
-
-    src = os.path.join(ZW_MOD_FULL_PATH, "default_conf.py")
-    dst = os.path.join(instance_full_path, "conf.py")
-    if os.path.exists(dst):
-        msg = dst + " already exists, skip \n"
-        logging.warn(msg)
-    else:
-        shutil.copyfile(src, dst)
 
 
     cp_fcgi_scripts(instance_full_path)
