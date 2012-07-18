@@ -1,6 +1,3 @@
-# ZBox Wiki
+# Zbox Wiki Guide 
 
-
-{{{#!zw
-ls("zbox-wiki", maxdepth=3)
-}}}
+[English](zbox-wiki/) | [简体中文](zbox-wiki_zh_CN/)

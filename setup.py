@@ -15,7 +15,7 @@ kwargs = dict(
 
     url = "https://github.com/shuge/zbox_wiki",
 
-    license = "MIT License",
+    license = "BSD License",
 
     platforms = ["Mac OS X", "Linux"],
 

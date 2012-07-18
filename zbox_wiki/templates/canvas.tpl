@@ -28,6 +28,8 @@ $if enable_show_home_link or enable_show_quick_links:
             <a href="/~recent">Recent Changes</a>
             <a href="/~all">All</a>
             <a href="/~settings">Settings</a>
+
+        $if not config.getboolean("main", "readonly"):
             <a href="/~new">Create Page</a>
     </div>
 
