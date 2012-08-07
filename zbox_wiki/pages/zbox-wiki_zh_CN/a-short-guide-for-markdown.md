@@ -14,7 +14,7 @@ source:
     a **fat boy**, a _thin girl_
 
 
-HTML:
+Result:
 
 a **fat boy**, a _thin girl_
 
@@ -28,7 +28,7 @@ This is [Wikipedia](http://en.wikipedia.org/wiki) link.
 ```
 
 
-HTML:
+Result:
 
 This is [Wikipedia](http://en.wikipedia.org/wiki) HTML link.
 
@@ -46,7 +46,7 @@ This is another [Wikipedia in English] [wp] link.
 ```
 
 
-HTML:
+Result:
 
 This is [Wikipedia] [wp] link.
 
@@ -93,7 +93,7 @@ it prints `hello world`.
 ```
 
 
-HTML:
+Result:
 
 it prints `hello world`
 
@@ -114,7 +114,7 @@ source:
     ```
 
       
-HTML:
+Result:
 
 ```
 int 
@@ -136,28 +136,60 @@ source:
 !| SIP-C | Session Initial Protocol compact version |
 ```
 
-HTML:
+Result:
 
 || name || desc ||
 | SIP | Session Initial Protocol |
 | SIP-C | Session Initial Protocol compact version |
 
 
-### Macro
+## Macro
 
-Graphviz/dot
+### Graphviz/dot
 
 ```{{{#!dot
-digraph G {
+digraph arch {
     rankdir = "LR"
 
-    PyGraphviz -> ZBoxWiki
+    webpy [ label = "Web.py" ]
+    py [ label = "Python" ]
+    zbwiki [ label = "ZBoxWiki" ]
+
+    webpy -> py
+    zbwiki -> webpy
+    
+    Markdown -> zbwiki
+    Graphviz -> zbwiki
+    TeX -> zbwiki
 }
 }}}
 ```
 
 
-TeX/LaTeX
+{{{#!dot
+digraph arch {
+    rankdir = "LR"
+
+    webpy [ label = "Web.py" ]
+    py [ label = "Python" ]
+    zbwiki [ label = "ZBoxWiki" ]
+
+    webpy -> py
+    zbwiki -> webpy
+    
+    Markdown -> zbwiki
+    Graphviz -> zbwiki
+    TeX -> zbwiki
+}
+}}}
+
+
+
+
+
+### TeX
+
+Source:
 
 ```{{{#!tex
 E_k = \frac{1}{2}m_0 v^2 + \cdots
@@ -165,8 +197,25 @@ E_k = \frac{1}{2}m_0 v^2 + \cdots
 ```
 
 
+Result:
+
+{{{
+#!tex
+E_k = \frac{1}{2}m_0 v^2 + \cdots
+
+...
+
+E = m c^2
+}}}
+
+
+
+### List files
+
 list all files of specify path
 
+
+Source:
 
 ```{{{#!zw
 ls("docs/", maxdepth=3)

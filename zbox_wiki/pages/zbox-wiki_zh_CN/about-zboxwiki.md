@@ -1,132 +1,33 @@
-# About ZBox Wiki
+# 关于 ZBox Wiki
 
-ZBox(pronounce |ziːbɒks|) Wiki is a lightweight wiki system write in Python,  
-it's released under the MIT license.
+ZBox(发音为 |ziːbɒks|) Wiki 是一个使用 Python 实现的轻量级的 wiki 系统,  
+使用宽松的 BSD 许可发布。
 
-## FEATURES
+## 特性
 
-What is **the most difference** between ZBox Wiki and others?
+ZBox Wiki 和其它 wiki 系统**最大区别**在哪里?
 
- * **pythonic**, lightweigt, simple, easy to **use**, easy to **read** and easy to **extend**
- * support Markdown (with table parsing extension) syntax, [guide](a-short-guide-for-markdown)
- * support button mode path
- * support simple TeX/LaTeX (requires [LaTeX] [latex] and [dvipng] [dvipng]), [demo](tex-in-zboxwiki)
- * support simple Graphviz/dot (requires [PyGraphviz] [pygraphviz]), [demo](dot-in-zboxwiki)
+ * **pythonic**, 轻量级, 简单, 易于使用，可读性高，易于维护
+ * 支持 Markdown (额外支持 table 解释扩展) 语法
+ * 支持 button mode path
 
-others
+ZBox Wiki 对 Geek 和程序员友好:
 
- * run up without database
- * IP/network range access restriction, simple ACL
- * auto generate the Table Of Content
- * auto include static file, support custom specify page(s) theme
+ * 支持简单的 TeX (依赖 TeX Live 和 dvipng), [示例](tex-in-zboxwiki)
+ * 支持简单的 Graphviz (依赖 PyGraphviz), [示例](dot-in-zboxwiki)
 
+其它
 
-## GET STARTED
+ * 不需要数据库就是可以运行
+ * 简单的 IP/网段 访问控制
+ * 自动生成内容标题索引
+ * 自动包含同目录相应静态文件，支持自定义指定页面主题
 
-### RUNTIME REQUIREMENTS I
+## 截图
 
-Mac OS X, Debian GNU/Linux and Ubuntu includes Python 2.6+ by default;
+[存放在 flickr 上的截图](http://www.flickr.com/photos/71317153@N06/6445429383/in/set-72157628256603985/)
 
 
-Install GitHub(Git GUI client) on Mac OS X:
+----
 
-    http://mac.github.com/
-
-Install git-core(Git CLI client) on Mac OS X:
-
-    sudo port isntall git-core
-
-
-Install Git on Debian GNU/Linux and Ubuntu:
-
-    sudo apt-get install git-core -y
-
-
-Install ZBox wiki:
-
-    git clone git://github.com/shuge/zbox_wiki.git
-    cd zbox_wiki
-    python debug_main.py 8080
-
-Visit [http://localhost:8080](http://localhost:8080) .
-
-
-If you want to run it in instance mode:
-
-    zwadmin.py create /path/to/proj
-    zwd.py --path /path/to/proj
-
-
-### RUNTIME REQUIREMENTS II (OPTIONAL)
-
-Simple TeX/LaTeX feature requires:
-
- - latex
- - dvipng 1.13+
-
-
-Install latex On Mac OS X, see [TexShop] [texshop] ;
-
-Install dvipng on Mac OS X via MacPorts
-
-    sudo port install dvipng
-
-
-Install TeX/LaTeX (160 M +) on Debian/Ubuntu
-
-    sudo apt-get install texlive-latex-base
-
-Install dvipng on Debian/Ubuntu
-
-    sudo apt-get install dvipng
-
-
-### RUNTIME REQUIREMENTS III (OPTIONAL)
-
-Simple Graphviz/dot feature requires:
-
- - pygraphviz
-
-
-Install pygraphviz On Mac OS X via MacPorts
-
-    sudo port install py27-pygraphviz
-
-
-Install pygraphviz (20 M +) on Debian/Ubuntu
-
-    sudo apt-get install pkg-config
-    sudo apt-get install python-pygraphviz
-
-
-Graphviz GUI Editors on Mac OS X in MacPorts:
-
- * gvedit
- * graphviz-gui
-
-
-
-## SCREENSHOTS
-
-[screenshots on flickr](http://www.flickr.com/photos/71317153@N06/6445429383/in/set-72157628256603985/)
-
-
-
-## A SHORT GUIDE FOR MARKDOWN
-
-
-[A Short Guide For Markdown](a-short-guide-for-markdown)
-
-
-
-
-
-[macports]: http://www.macports.org/install.php
-
-[latex]: http://www.tug.org/texlive
-[texlive]: http://www.tug.org/texlive
-[texshop]: http://pages.uoregon.edu/koch/texshop
-
-[dvipng]: http://savannah.nongnu.org/projects/dvipng
-
-[pygraphviz]: http://networkx.lanl.gov/pygraphviz
+下一步: [安装 Zbox Wiki](zbox-wiki-installation)

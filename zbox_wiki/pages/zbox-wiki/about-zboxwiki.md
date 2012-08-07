@@ -11,9 +11,9 @@ What is **the most difference** between ZBox Wiki and others?
  * support Markdown (with table parsing extension) syntax
  * support button mode path
 
-ZBox Wiki is nice to Geek/Programmer
+ZBox Wiki is nice to Geek and Programmer
 
- * support simple TeX/LaTeX (requires TeX Live and dvipng), [example](tex-in-zboxwiki)
+ * support simple TeX (requires TeX Live and dvipng), [example](tex-in-zboxwiki)
  * support simple Graphviz (requires PyGraphviz), [example](dot-in-zboxwiki)
 
 others
@@ -28,5 +28,7 @@ others
 
 [screenshots on flickr](http://www.flickr.com/photos/71317153@N06/6445429383/in/set-72157628256603985/)
 
+
+----
 
 Next: [Zbox Wiki Installation](zbox-wiki-installation)

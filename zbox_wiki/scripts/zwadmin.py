@@ -24,7 +24,7 @@ if IS_DEB_BASED not in ("ubuntu", "debian"):
 
 zwd_help_msg_for_deb_based = """
 start ZBox Wiki:
-    zwd.py --path %s
+    zwd.py --port 8000 --path %s
 
 If you want to run it as daemon/FCGI:
 
@@ -54,7 +54,7 @@ Please report bug to shuge.lee <AT> GMail.
 
 zwd_help_msg = """
 start ZBox Wiki:
-    zwd.py --path %s
+    zwd.py --port 8000 --path %s
 
 If you want to run it as daemon/FCGI,
 visit http://webpy.org/cookbook/fastcgi-nginx for more information.

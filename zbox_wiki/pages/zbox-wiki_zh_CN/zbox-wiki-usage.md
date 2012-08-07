@@ -1,16 +1,16 @@
-# Zbox Wiki Usage
+# 使用 Zbox Wiki
 
-## Util Scripts
+## Zbox Wiki 自带实用脚本 
 
-|| script name || description ||
-| zwadmin.py | create or upgrade a zbox wiki instance |
-| zwd.py | run a simple debug web server with specify ip/port and instance path |
+|| 脚本名 || 描述 ||
+| zwadmin.py | 创建或升级一个 Zbox Wiki 实例 |
+| zwd.py | 以 Debug 模式，在指定 IP地址/端口及实例目录，运行一个简单的 Web server |
 
 
-## Customization
+## 定制
 
-There is a MS-Windows ini style configuration file named default.cfg in every Zbox Wiki instance,    
-you should custom it to satisfy your need.
+每个 Zbox Wiki 实例中都会有一个叫 default.cfg 的配置文件。
+通过修改它可以满足您很多需求。
 
 section _main_
 
@@ -67,4 +67,4 @@ section _frontend_
 
 ----
 
-Next: [A Short Guide for Markdown](a-short-guide-for-markdown)
+下一步: [Zbox Wiki Markdown 简明指南](a-short-guide-for-markdown)
