@@ -117,16 +117,21 @@ def update_page_by_req_path(req_path, content):
 
 def wp_read(req_path, enable_show_full_path, enable_auto_toc, enable_highlight,
             pages_path = None,
-            enable_show_quick_links = config_agent.config.getboolean("frontend", "enable_show_quick_links"),
-            enable_show_source_button = config_agent.config.getboolean("frontend", "enable_show_source_button"),
-            enable_show_home_link = config_agent.config.getboolean("frontend", "enable_show_home_link")):
+            enable_show_quick_links = None,
+            enable_show_source_button = None,
+            enable_show_home_link = None):
+
+    if enable_show_quick_links is None:
+        enable_show_quick_links = config_agent.config.getboolean("frontend", "enable_show_quick_links")
+    if enable_show_source_button is None:
+        enable_show_source_button = config_agent.config.getboolean("frontend", "enable_show_source_button"),
+    if enable_show_home_link is None:
+        enable_show_home_link = config_agent.config.getboolean("frontend", "enable_show_home_link")
 
     if pages_path is None:
         folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
     else:
         folder_pages_full_path = pages_path
-
-    full_path = mdutils.req_path_to_full_path(req_path)
 
     if config_agent.config.getboolean("frontend", "enable_button_mode_path"):
         buf = mdutils.text_path2button_path("/%s" % req_path)
@@ -134,6 +139,7 @@ def wp_read(req_path, enable_show_full_path, enable_auto_toc, enable_highlight,
     else:
         button_path = None
 
+    full_path = mdutils.req_path_to_full_path(req_path)
 
     if os.path.isfile(full_path):
         work_full_path = os.path.dirname(full_path)
@@ -152,15 +158,11 @@ def wp_read(req_path, enable_show_full_path, enable_auto_toc, enable_highlight,
         work_full_path = full_path
         static_file_prefix = os.path.join("/static/pages", req_path)
 
-        buf1 = get_dot_idx_content_by_full_path(full_path) or ""
-        buf2 = get_page_file_list_by_req_path(req_path, folder_pages_full_path = folder_pages_full_path)
-
-        if buf2:
-            buf2 = mdutils.sequence_to_unorder_list(buf2.split("\n"), enable_show_full_path = enable_show_full_path)
-        else:
-            buf2 = ""
-
-        content = buf1 + "\n" + "----" + "\n" + buf2
+        content = get_dot_idx_content_by_full_path(full_path) or ""
+        if not content:
+            content = get_page_file_list_by_req_path(req_path, folder_pages_full_path = folder_pages_full_path)
+            if content:
+                content = mdutils.sequence_to_unorder_list(content.split("\n"), enable_show_full_path = enable_show_full_path)
 
     else:
         if req_path == "home" and (not os.path.exists(full_path)):
