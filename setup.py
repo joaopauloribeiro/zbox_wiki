@@ -54,6 +54,7 @@ kwargs = dict(
           "default.cfg",
           "pages/robots.txt",
           "pages/.*.md",
+          "pages/*.md",
           "pages/zbox-wiki/.*.md",
           "pages/zbox-wiki/*.md",
           "pages/zbox-wiki/nginx-*.conf",
