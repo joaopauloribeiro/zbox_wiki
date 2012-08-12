@@ -14,10 +14,10 @@ import web
 logging.getLogger("mdutils").setLevel(logging.DEBUG)
 
 try:
-    import dot2png
+    import graphviz2png
 except ImportError:
-    dot2png = None
-    logging.warn("import dot2png module failed")
+    graphviz2png = None
+    logging.warn("import graphviz2png module failed")
 
 try:
     import tex2png
@@ -97,7 +97,7 @@ def trac_wiki_dot2md(text, save_to_prefix):
 
     def code_repl(match_obj):
         code = match_obj.group('code')
-        dst_path = dot2png.dot_text2png(text = code, png_path = save_to_prefix)
+        dst_path = graphviz2png.dot_text2png(text = code, png_path = save_to_prefix)
         png_filename = os.path.basename(dst_path)
 
         return "![%s](%s)" % (png_filename, png_filename)
@@ -228,7 +228,7 @@ def md2html(text, work_full_path = None, static_file_prefix = None):
 
             buf = text
 
-    if work_full_path and dot2png:
+    if work_full_path and graphviz2png:
         try:
             buf = trac_wiki_dot2md(buf, save_to_prefix = work_full_path)
         except Exception:
