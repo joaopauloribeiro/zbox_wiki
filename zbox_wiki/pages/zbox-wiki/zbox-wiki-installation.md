@@ -4,9 +4,14 @@
 
 ### Basics
 
-OS X ships Python 2.6 by default, I strongly recommend you upgrade it to 2.7.
+OS X ships Python 2.6 by default, I strongly recommend 2.7 to you.
 
-Install a package management system on OS X, such as [MacPorts](http://www.macports.org/). I do example with HomeBrew following.
+Install a package management system on OS X, such as [MacPorts](http://www.macports.org/), or [HomeBrew](http://mxcl.github.com/homebrew/), then use it to install other required packages.
+
+NOTE: HomeBrew is cool, but I failed to install some packages with HomeBrew on OS X 10.6.
+
+I do example with MacPorts following.
+
 
 Install setuptools:
 
@@ -18,7 +23,7 @@ Install setuptools:
 
 Install Zbox Wiki:    
 
-    sudo easy_install zbox_wiki
+    sudo easy_install -U zbox_wiki
 
 
 Create a Zbox Wiki instance:
@@ -32,7 +37,7 @@ Visit [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
 
 ### Advanced
 
-Simple TeX/LaTeX feature requires:
+Simple TeX feature requires:
 
  - TeX Live
  - dvipng 1.13+
@@ -61,7 +66,7 @@ Install pygraphviz (20 M +) on Debian/Ubuntu
     sudo apt-get install python-pygraphviz
 
 
-restart the process for enabling new features, visit [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
+Restart the process for enabling new features, visit [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
 
 
 ## Zbox Wiki Installation for Ubuntu
@@ -75,7 +80,7 @@ Install setuptools
 
 Install ZBox wiki
 
-    sudo easy_install zbox_wiki
+    sudo easy_install -U zbox_wiki
 
 
 Create a Zbox Wiki instance:
@@ -109,7 +114,7 @@ Install pygraphviz (20 M +)
     sudo apt-get install pkg-config
     sudo apt-get install python-pygraphviz
 
-restart the process for enabling new features, visit [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
+Restart the process for enabling new features, visit [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
 
 
 [macports]: http://www.macports.org/install.php
@@ -127,3 +132,5 @@ restart the process for enabling new features, visit [http://0.0.0.0:8080/](http
 ----
 
 Next: [Zbox Wiki Usage](zbox-wiki-usage)
+
+

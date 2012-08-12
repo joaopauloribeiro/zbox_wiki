@@ -1,15 +1,16 @@
-# A Short Guide For Markdown
+# A Short Guide For Zbox Wiki Markdown
 
 > Markdown is intended to be as easy-to-read and easy-to-write as is feasible.
 
 http://daringfireball.net/projects/markdown/syntax#philosophy
 
 
-## Inline/Span Elements
+**Zbox Wiki Markdown** means Markdown with Zbox Wiki extenstions.
 
-### Bold, Italic
 
-source:
+## Bold & Italic
+
+Source:
 
     a **fat** boy, a _thin_ girl
 
@@ -19,12 +20,27 @@ Result:
 a **fat** boy, a _thin_ girl
 
 
-### Link
+## List
 
-source:
+Source:
 
 ```
-This is [Wikipedia](http://en.wikipedia.org/wiki) link.
+- item A
+- item B
+```
+
+Result:
+
+- item A
+- item B
+
+
+## Link
+
+Source:
+
+```
+This is [Wikipedia](http://en.wikipedia.org/wiki) HTML link.
 ```
 
 
@@ -33,14 +49,14 @@ Result:
 This is [Wikipedia](http://en.wikipedia.org/wiki) HTML link.
 
 
-### Reference-style Link
+## Reference-style Link
 
-source:
+Source:
 
 ```
-This is [Wikipedia] [wp] link.
+This is [Wikipedia] [wp] HTML link.
 
-This is another [Wikipedia in English] [wp] link.
+This is another [Wikipedia in English] [wp] HTML link.
 
 [wp]: http://en.wikipedia.org/wiki
 ```
@@ -55,22 +71,28 @@ This is another [Wikipedia in English] [wp] link.
 [wp]: http://en.wikipedia.org/wiki
 
 
-### Image
+## Image
 
-source:
+Source:
 
 ```
-![Alt text](/path/to/img.jpg "Optional title")
+![show this if the image does not exists](../Kubuntu-logo.png "display this if cursor over the image")
 ```
 
 
+Result I:
 
-## Block Elements
+![show this if the image does not exists](../Kubuntu-logo-not-exists.png "display this if cursor over the image")
 
 
-### Header/Title
+Result II:
 
-source:
+![show this if the image does not exists](../Kubuntu-logo.png "display this if cursor over the image")
+
+
+## Title
+
+Source:
 
 ```
 # header level 1
@@ -80,13 +102,12 @@ source:
 ##### header level 5
 ```
 
-
-### Source Code I
-
-Inline source code.
+There results are ugly, here ignore them.
 
 
-source:
+## Highlight Inline Source Code
+
+Source:
 
 ```
 it prints `hello world`.
@@ -98,17 +119,14 @@ Result:
 it prints `hello world`
 
 
-### Source Code II
+## Highlight Multiple Lines Source Code
 
-Multiple line source code.
-
-source:
+Source:
 
     ```
-    int
-    main(void)
+    int main(nt argc, char *argv[])
     {
-        printf("hello");
+        printf("hello world \n");
         return 0;
     }
     ```
@@ -117,18 +135,17 @@ source:
 Result:
 
 ```
-int 
-main( void )
+int main(int argc, char *argv[])
 {
-    printf( "hello" );
+    printf("hello world \n");
     return 0;
 }
 ```
 
 
-### Table
+## Table
 
-source:
+Source:
 
 ```
 !|| name || desc ||
@@ -143,11 +160,11 @@ Result:
 | SIP-C | Session Initial Protocol compact version |
 
 
-## Macro
+## Macro graphviz
 
-### Graphviz/dot
+Source:
 
-```{{{#!dot
+```{{{#!graphviz
 digraph arch {
     rankdir = "LR"
 
@@ -166,7 +183,9 @@ digraph arch {
 ```
 
 
-{{{#!dot
+Result:
+
+{{{#!graphviz
 digraph arch {
     rankdir = "LR"
 
@@ -184,10 +203,7 @@ digraph arch {
 }}}
 
 
-
-
-
-### TeX
+## Macro tex
 
 Source:
 
@@ -209,8 +225,7 @@ E = m c^2
 }}}
 
 
-
-### List files
+## Macro ls
 
 list all files of specify path
 
@@ -218,11 +233,20 @@ list all files of specify path
 Source:
 
 ```{{{#!zw
-ls("docs/", maxdepth=3)
+ls("zbox-wiki/", maxdepth=3)
 }}}
 ```
+
+Result：
+
+{{{#!zw
+ls("zbox-wiki/", maxdepth=3)
+}}}
 
 
 ## References
 
  - http://daringfireball.net/projects/markdown/syntax
+
+
+

@@ -112,24 +112,19 @@
 代码：
 
     ```
-    int
-    main(void)
+    int main(int argc, char *argv[])
     {
-        printf("hello");
+        printf("hello world \n");
         return 0;
     }
     ```
-
-（前缀带四个空格）
-
       
 结果：
 
 ```
-int 
-main( void )
+int main(int argc, char *argv[])
 {
-    printf( "hello" );
+    printf("hello world \n");
     return 0;
 }
 ```
@@ -156,7 +151,7 @@ main( void )
 
 代码：
 
-```{{{#!dot
+```{{{#!graphviz
 digraph arch {
     rankdir = "LR"
 
@@ -176,7 +171,7 @@ digraph arch {
 
 结果：
 
-{{{#!dot
+{{{#!graphviz
 digraph arch {
     rankdir = "LR"
 

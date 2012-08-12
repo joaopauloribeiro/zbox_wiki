@@ -1,70 +1,106 @@
 # Zbox Wiki Usage
 
-## Util Scripts
+## Using Util Scripts
 
 || script name || description ||
-| zwadmin.py | create or upgrade a zbox wiki instance |
+| zwadmin.py | create or upgrade a Zbox Wiki instance |
 | zwd.py | run a simple debug web server with specify ip/port and instance path |
 
+Create a Zbox Wiki instance
 
-## Customization
-
-There is a MS-Windows ini style configuration file named default.cfg in every Zbox Wiki instance,    
-you should custom it to satisfy your need.
-
-section _main_
-
-|| Option || Default Value || desc || Note ||
-| version | 201204 | _ | DO NOT CHANGE IT |
-| debug | 0 | output log | _ |
-| error_log_path | None | _ |  _ |
-| readonly | 1 | disable create/update/delete/rename page via Web interface anonymous | _ | 
-| maintainer_email | shuge.lee@gmail.com | this E-Mail will show in readonly warning page and footer | _ |
-| repository_url | git://github.com/shuge/zbox_wiki.git | it will show in readonly warning page | _ | 
+    zwadmin.py --create /tmp/my_blog
 
 
-section _paths_
+Understand the layout of instance
 
-|| Option || Default Value || desc || Note ||
-| instance_full_path | _ | a.k.a. **path prefix** | DO NOT CHANGE IT  | 
-| pages_path | path prefix(pass from zwd.py) + "/pages" | _ | _ | 
-| static_path | path prefix + "/static" | _ | _ |
-| sessions_path | path prefix + "/sessions" | _ | _ |
-| tmp_path | path prefix + "/tmp " | _ | _ | 
-| templates_path | templates + "/tmp " | _ | _ |
+    $ find /tmp/my_blog -maxdepth 1
 
 
-section _cache_
+It should be
 
-|| Option || Default Value || desc || Note ||
-| cache_update_interval | 60 (1 minute) | craete a flat file to save the files list of /path/to/pages | _ |
+    /tmp/my_blog
+    /tmp/my_blog/nginx-debian.conf
+    /tmp/my_blog/stop_fcgi.sh
+    /tmp/my_blog/start_fcgi.sh
+    /tmp/my_blog/fcgi_main.py
+    /tmp/my_blog/static/
+    /tmp/my_blog/tmp/
+    /tmp/my_blog/pages/
+    /tmp/my_blog/templates/
+    /tmp/my_blog/sessions/
 
 
-section _pagination_
+Run instance
 
-|| Option || Default Value || desc || Note ||
-| page_limit | 50 | _ | _ | 
-| search_page_limit | 100 | _ | _ | 
+    zwd.py --path /tmp/my_blog --port 8000
 
 
-section _frontend_
+## Create, Read, Update and Delete Page
 
-|| Option || Default Value || desc || Note ||
-| enable_show_full_path | 0 | show full path of page file instead of page title(h1) in the list view  | _ | 
-| enable_auto_toc | 1 | show table of content on the top-right | _ | 
-| enable_highlight | 1 | highlight source code | see also [Google Code Prettify](http://code.google.com/p/google-code-prettify) | 
+Anonymous user could create, read, update and delete page via Web interface by default.
 
-|| Option || Default Value || desc || Note ||
-| enable_show_quick_links | 1 | show Home/Recent Change/All/Settings link on the header | _ | 
-| enable_show_home_link | 1 | show Home link on the header | _ | 
-| home_link_name | Home | the name of Home link on the header | _ | 
+There is a folder named **pages** in every instance, all markdown page files in it, and it is the most important thing.
 
-|| Option || Default Value || desc || Note ||
-| enable_button_mode_path | 1 | | _ | 
-| enable_show_source_button | 1 | show view source of page button on the footer | _ | 
-| enable_reader_mode | 1 | enable Safari Reader mode for page | _ | 
+From a programmer perspective, it a good idea that put whole folder pages under version control:
+
+     mv /tmp/my_blog/pages /tmp/my_blog/pages.bak
+     git init /tmp/my_blog/pages
+     cd /tmp/my_blog/pages
+     git remote add origin git://github.com/your_name/my_blog.git
+     ...
+
+
+## Custom CSS/JavaScript for Specify Page
+
+ZBox follows this rules
+
+ - includes full/path/to/page/*.css if they exist
+ - includes full/path/to/page/*.js if they exist
+
+or
+
+ - includes full/path/to/instance/static/css/*.css
+ - includes full/path/to/instance/static/js/*.js
+
+If you want to include both CSS/JavaScript files in the folder of specify page and system's
+
+append these lines into your CSS file header
+
+    @import(/static/css/zw-base.css);
+    @import(/static/css/zw-reader.css);
+    @import(/static/css/zw-toc.css);
+    @import(/static/js/prettify/prettify.css");
+
+
+append these lines into your Markdown page
+
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="/static/js/zw-base.js"></script>
+    <script type="text/javascript" src="/static/js/zw-toc.js"></script>
+
+    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
+    <script type="text/javascript" src="/static/js/highlight.js"></script>
+
+
+## Using Zbox Wiki as Personal Blog
+
+TBD.
+
+
+## Using Zbox Wiki as API Documentation CMS
+
+TBD.
+
+
+## Using Zbox Wiki as Wiki System
+
+TBD.
 
 
 ----
 
-Next: [A Short Guide for Markdown](a-short-guide-for-markdown)
+Next: [Zbox Wiki Deployment](zbox-wiki-deploy)
+
+

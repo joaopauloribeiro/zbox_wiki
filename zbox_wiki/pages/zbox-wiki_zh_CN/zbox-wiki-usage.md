@@ -1,70 +1,106 @@
 # 使用 Zbox Wiki
 
-## Zbox Wiki 自带实用脚本 
+## 使用 Zbox Wiki 自带实用脚本
 
 || 脚本名 || 描述 ||
 | zwadmin.py | 创建或升级一个 Zbox Wiki 实例 |
 | zwd.py | 以 Debug 模式，在指定 IP地址/端口及实例目录，运行一个简单的 Web server |
 
 
-## 定制
+创建一个 Zbox Wiki 实例
 
-每个 Zbox Wiki 实例中都会有一个叫 default.cfg 的配置文件。
-通过修改它可以满足您很多需求。
-
-section _main_
-
-|| Option || Default Value || desc || Note ||
-| version | 201204 | _ | DO NOT CHANGE IT |
-| debug | 0 | output log | _ |
-| error_log_path | None | _ |  _ |
-| readonly | 1 | disable create/update/delete/rename page via Web interface anonymous | _ | 
-| maintainer_email | shuge.lee@gmail.com | this E-Mail will show in readonly warning page and footer | _ |
-| repository_url | git://github.com/shuge/zbox_wiki.git | it will show in readonly warning page | _ | 
+    zwadmin.py --create /tmp/my_blog
 
 
-section _paths_
+理解实例的文件布局
 
-|| Option || Default Value || desc || Note ||
-| instance_full_path | _ | a.k.a. **path prefix** | DO NOT CHANGE IT  | 
-| pages_path | path prefix(pass from zwd.py) + "/pages" | _ | _ | 
-| static_path | path prefix + "/static" | _ | _ |
-| sessions_path | path prefix + "/sessions" | _ | _ |
-| tmp_path | path prefix + "/tmp " | _ | _ | 
-| templates_path | templates + "/tmp " | _ | _ |
+    $ find /tmp/my_blog -maxdepth 1
 
 
-section _cache_
+大概这样：
 
-|| Option || Default Value || desc || Note ||
-| cache_update_interval | 60 (1 minute) | craete a flat file to save the files list of /path/to/pages | _ |
+    /tmp/my_blog
+    /tmp/my_blog/nginx-debian.conf   # 用于在 NGINX 上部署 
+    /tmp/my_blog/stop_fcgi.sh   # 用于在 NGINX 上部署 
+    /tmp/my_blog/start_fcgi.sh   # 用于在 NGINX 上部署 
+    /tmp/my_blog/fcgi_main.py   # 用于在 NGINX 上部署 
+    /tmp/my_blog/static/  # CSS/JavaScript 文件目录
+    /tmp/my_blog/tmp/  
+    /tmp/my_blog/pages/  # Markdown 源文件 保存目录
+    /tmp/my_blog/templates/  # HTML 模板文件
+    /tmp/my_blog/sessions/  # HTTP Session 保存目录
 
 
-section _pagination_
+运行实例
 
-|| Option || Default Value || desc || Note ||
-| page_limit | 50 | _ | _ | 
-| search_page_limit | 100 | _ | _ | 
+    zwd.py --path /tmp/my_blog --port 8000
 
 
-section _frontend_
+## 创建，访问，更新和删除页面
 
-|| Option || Default Value || desc || Note ||
-| enable_show_full_path | 0 | show full path of page file instead of page title(h1) in the list view  | _ | 
-| enable_auto_toc | 1 | show table of content on the top-right | _ | 
-| enable_highlight | 1 | highlight source code | see also [Google Code Prettify](http://code.google.com/p/google-code-prettify) | 
+默认地，匿名用户可以通过 Web 界面创建，访问，更新和删除任何页面。
 
-|| Option || Default Value || desc || Note ||
-| enable_show_quick_links | 1 | show Home/Recent Change/All/Settings link on the header | _ | 
-| enable_show_home_link | 1 | show Home link on the header | _ | 
-| home_link_name | Home | the name of Home link on the header | _ | 
+每个实例下有一个名为 pages 的目录，所有的 Markdown 文件都会保存到此目录下。
+它是实例里最重要的目录。
 
-|| Option || Default Value || desc || Note ||
-| enable_button_mode_path | 1 | | _ | 
-| enable_show_source_button | 1 | show view source of page button on the footer | _ | 
-| enable_reader_mode | 1 | enable Safari Reader mode for page | _ | 
+从一个程序员的角度看，为 folder 增加版本控制是个好主意。
+
+     mv /tmp/my_blog/pages /tmp/my_blog/pages.bak
+     git init /tmp/my_blog/pages
+     cd /tmp/my_blog/pages
+     git remote add origin git://github.com/your_name/my_blog.git
+     ...
+
+
+## 定制某个页面的 CSS/JavaScript 
+
+Zbox 渲染每个 Markdown 文件为 HTML 文件时，会遵循以下规则：
+
+ - 如果某个 Markdown 文件所在的目录下包含 *.css 文件，则自动包含它们，并且不包含系统默认的 CSS 文件
+ - 如果某个 Markdown 文件所在的目录下包含 *.js 文件，则自动包含它们，并且不包含系统默认的 JavaScript 文件
+
+或者
+
+ - 只包含系统默认的 CSS 文件，full/path/to/instance/static/css/*.css
+ - 只包含系统默认的 JavaScript 文件，full/path/to/instance/static/css/*.js
+
+
+如果您想使用自定义 CSS 的同时包含系统默认 CSS，则添加以下内容到某个页面所在目录的主 CSS 文件里面：
+
+    @import(/static/css/zw-base.css);
+    @import(/static/css/zw-reader.css);
+    @import(/static/css/zw-toc.css);
+    @import(/static/js/prettify/prettify.css");
+
+
+类似地，将以下内容添加到某个页面对应的 Markdown 文件里面：
+
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="/static/js/zw-base.js"></script>
+    <script type="text/javascript" src="/static/js/zw-toc.js"></script>
+
+    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
+    <script type="text/javascript" src="/static/js/highlight.js"></script>
+
+
+## 示例：使用 Zbox Wiki 作为 个人博客
+
+待完成。
+
+
+## 示例：使用 Zbox Wiki 作为 应用程序接口文档 内容管理系统
+
+待完成。
+
+
+## 示例：使用 Zbox Wiki 作为 维基系统
+
+待完成。
 
 
 ----
 
-下一步: [Zbox Wiki Markdown 简明指南](a-short-guide-for-markdown)
+下一步: [部署 Zbox Wiki](zbox-wiki-deploy)
+

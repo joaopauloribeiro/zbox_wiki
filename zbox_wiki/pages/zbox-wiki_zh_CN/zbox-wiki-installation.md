@@ -4,11 +4,18 @@
 
 ### 安装基本组件
 
-虽然 OS X 已自带 Python 2.6 环境，但是，我强烈推荐您使用 Python 2.7 (OS X 10.7 环境默认使用只版本) 。
+虽然 OS X 已自带 Python 2.6 环境，但是，我强烈推荐您使用 Python 2.7 (OS X 10.7 环境默认使用此版本) 。
 
 安装一个软件包管理系统，如 [MacPorts](http://www.macports.org)，或 [HomeBrew](http://mxcl.github.com/homebrew/)。
+然后使用它来安装其它依赖软件包。
 
-下面以 HomeBrew 为例。HomeBrew 默认安装软件到 /usr/local ，执行命令时不需要带 sudo/su 前缀。
+HomeBrew 默认安装软件到 /usr/local ，执行命令时不需要带 sudo/su 前缀。
+
+注意： HomeBrew 比 MacPorts 更前卫年轻，但我在 OS X 10.6 上使用它安装某些软件包不成功。
+建议您在 10.7 上使用 HomeBrew ，在 10.6 或更旧系统上使用 MacPorts 。
+
+下面以 MacPorts 为例。
+
 
 安装 setuptools:
 
@@ -20,7 +27,7 @@
 
 安装 Zbox Wiki:    
 
-    sudo easy_install zbox_wiki
+    sudo easy_install -U zbox_wiki
 
 
 创建一个 Zbox Wiki 实例:
@@ -32,9 +39,9 @@
 在浏览器中访问 [http://0.0.0.0:8080/](http://0.0.0.0:8080/) 测试。
 
 
-### 安装其它可选组队
+### 安装其它可选组件
 
-TeX/LaTeX 特性依赖:
+TeX 特性依赖:
 
  - TeX Live
  - dvipng 1.13+
@@ -46,7 +53,7 @@ TeX/LaTeX 特性依赖:
     sudo port install dvipng
 
 
-注意: HomeBrew 仓库并没有收录 dvipng ，所以这里使用 MacPorts 来安装相应软件包。
+注意: HomeBrew 仓库并没有收录 dvipng 软件包。
 
 
 Graphviz 特性依赖:
@@ -74,7 +81,7 @@ Graphviz 特性依赖:
 
 安装 ZBox wiki
 
-    sudo easy_install zbox_wiki
+    sudo easy_install -U zbox_wiki
 
 
 创建一个 Zbox Wiki 实例:
@@ -85,7 +92,7 @@ Graphviz 特性依赖:
 在浏览器中访问 [http://0.0.0.0:8080/](http://0.0.0.0:8080/) 测试。
 
 
-### 安装其它可选组队
+### 安装其它可选组件
 
 TeX/LaTeX 特性依赖:
 
@@ -127,3 +134,6 @@ Graphviz 特性依赖:
 ----
 
 下一步: [使用 Zbox Wiki](zbox-wiki-usage)
+
+
+

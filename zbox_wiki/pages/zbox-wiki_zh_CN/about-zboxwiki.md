@@ -1,14 +1,14 @@
 # 关于 ZBox Wiki
 
-ZBox(发音为 |ziːbɒks|) Wiki 是一个使用 Python 实现的轻量级的 wiki 系统,  
+ZBox(发音为 |ziːbɒks|) Wiki 是一个使用 Python 实现的轻量级的 Wiki 系统,  
 使用宽松的 BSD 许可发布。
 
 ## 特性
 
 ZBox Wiki 和其它 wiki 系统**最大区别**在哪里?
 
- * **pythonic**, 轻量级, 简单, 易于使用，可读性高，易于维护
- * 支持 Markdown (额外支持 table 解释扩展) 语法
+ * **Pythonic**, 轻量级, 简单, 易于使用，可读性高，易于维护
+ * 支持 Markdown (包含 Zbox Wiki 独特的扩展) 语法
  * 支持 button mode path
 
 ZBox Wiki 对 Geek 和程序员友好:
@@ -20,7 +20,7 @@ ZBox Wiki 对 Geek 和程序员友好:
 
  * 不需要数据库就是可以运行
  * 简单的 IP/网段 访问控制
- * 自动生成内容标题索引
+ * 自动生成 内容索引表（Table Of Content）
  * 自动包含同目录相应静态文件，支持自定义指定页面主题
 
 ## 截图
@@ -31,3 +31,6 @@ ZBox Wiki 对 Geek 和程序员友好:
 ----
 
 下一步: [安装 Zbox Wiki](zbox-wiki-installation)
+
+
+

@@ -7,8 +7,8 @@ it is released under the permissive 3-clause BSD license.
 
 What is **the most difference** between ZBox Wiki and others?
 
- * **pythonic**, lightweigt, simple, easy to **use**, easy to **read** and easy to **extend**
- * support Markdown (with table parsing extension) syntax
+ * **Pythonic**, lightweigt, simple, easy to **use**, easy to **read** and easy to **extend**
+ * support Markdown (with lots of extensions) syntax
  * support button mode path
 
 ZBox Wiki is nice to Geek and Programmer
