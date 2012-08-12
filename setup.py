@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-short_desc = "a lightweight wiki system with Markdown/Graphviz/LaTeX support"
+short_desc = "a lightweight wiki system with Markdown/Graphviz/TeX support"
 
 kwargs = dict(
     name = "zbox_wiki",
