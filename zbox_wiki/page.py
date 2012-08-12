@@ -255,8 +255,17 @@ def wp_source(req_path):
     full_path = mdutils.req_path_to_full_path(req_path)
 
     if os.path.isdir(full_path):
-        web.header("Content-Type", "text/plain; charset=UTF-8")
-        return "folder doesn't providers source code in Markdown"
+        a = os.path.join(full_path, ".index.md")
+        b = os.path.join(full_path, ".index.markdown")
+        if os.path.exists(a):
+            web.header("Content-Type", "text/plain; charset=UTF-8")
+            return commons.cat(a)
+        elif os.path.exists(b):
+            web.header("Content-Type", "text/plain; charset=UTF-8")
+            return commons.cat(b)
+        else:            
+            web.header("Content-Type", "text/plain; charset=UTF-8")
+            return "folder doesn't providers source code in Markdown"
 
     elif os.path.isfile(full_path):
         web.header("Content-Type", "text/plain; charset=UTF-8")

@@ -166,7 +166,7 @@ class WikiPage(object):
 
         inputs = web.input()
         action = inputs.get("action")
-        if action and action not in ("edit", "rename"):
+        if (not action) or (action not in ("edit", "rename")):
             raise web.BadRequest()
 
         content = inputs.get("content")
@@ -184,7 +184,7 @@ class WikiPage(object):
             page.update_page_by_req_path(req_path = req_path, content = content)
 
             web.seeother("/%s" % req_path)
-
+            return
         elif action == "rename":
             new_path = inputs.get("new_path")
             if not new_path:
@@ -213,14 +213,17 @@ class WikiPage(object):
             cache.update_recent_change_cache()
 
             if os.path.isfile(new_full_path):
-                return web.seeother("/%s" % new_path)
+                web.seeother("/%s" % new_path)
+                return
             elif os.path.isdir(new_full_path):
-                return web.seeother("/%s/" % new_path)
+                web.seeother("/%s/" % new_path)
+                return
             else:
                 raise Exception("un-expected path '%s'" % new_path)
 
         url = os.path.join("/", req_path)
-        return web.redirect(url)
+        web.redirect(url)
+        return
 
 
 class SpecialWikiPage(object):
@@ -310,6 +313,7 @@ class SpecialWikiPage(object):
                 latest_req_path = "/"
 
             web.seeother(latest_req_path)
+            return
         elif req_path == "~new":
             real_req_path = inputs.get("path")
             fixed_req_path = web.lstrips(real_req_path, "/")
@@ -323,6 +327,7 @@ class SpecialWikiPage(object):
             cache.update_all_pages_list_cache()
 
             web.seeother(real_req_path)
+            return
         else:
             raise web.NotFound()
 
