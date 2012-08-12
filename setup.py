@@ -53,8 +53,10 @@ kwargs = dict(
       "zbox_wiki" : [
           "default.cfg",
           "pages/robots.txt",
+          "pages/zbox-wiki/.*.md",
           "pages/zbox-wiki/*.md",
           "pages/zbox-wiki/nginx-*.conf",
+          "pages/zbox-wiki_zh_CN/.*.md",
           "pages/zbox-wiki_zh_CN/*.md",
           "pages/zbox-wiki_zh_CN/nginx-*.conf",
           "scripts/*.py",
