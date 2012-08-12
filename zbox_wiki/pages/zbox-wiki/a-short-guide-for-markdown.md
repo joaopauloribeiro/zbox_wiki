@@ -11,12 +11,12 @@ http://daringfireball.net/projects/markdown/syntax#philosophy
 
 source:
 
-    a **fat boy**, a _thin girl_
+    a **fat** boy, a _thin_ girl
 
 
 Result:
 
-a **fat boy**, a _thin girl_
+a **fat** boy, a _thin_ girl
 
 
 ### Link

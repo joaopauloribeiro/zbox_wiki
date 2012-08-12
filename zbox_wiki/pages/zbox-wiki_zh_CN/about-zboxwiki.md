@@ -13,8 +13,8 @@ ZBox Wiki 和其它 wiki 系统**最大区别**在哪里?
 
 ZBox Wiki 对 Geek 和程序员友好:
 
- * 支持简单的 TeX (依赖 TeX Live 和 dvipng), [示例](tex-in-zboxwiki)
- * 支持简单的 Graphviz (依赖 PyGraphviz), [示例](dot-in-zboxwiki)
+ * 支持简单的 TeX (依赖 TeX Live 和 dvipng), [示例](example-tex)
+ * 支持简单的 Graphviz (依赖 PyGraphviz), [示例](example-graphviz)
 
 其它
 

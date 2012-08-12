@@ -13,8 +13,8 @@ What is **the most difference** between ZBox Wiki and others?
 
 ZBox Wiki is nice to Geek and Programmer
 
- * support simple TeX (requires TeX Live and dvipng), [example](tex-in-zboxwiki)
- * support simple Graphviz (requires PyGraphviz), [example](dot-in-zboxwiki)
+ * support simple TeX (requires TeX Live and dvipng), [example](example-tex)
+ * support simple Graphviz (requires PyGraphviz), [example](example-graphviz)
 
 others
 

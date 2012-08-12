@@ -1,76 +1,85 @@
-# A Short Guide For Markdown
+# Zbox Wiki Markdown 简明指南
 
 > Markdown is intended to be as easy-to-read and easy-to-write as is feasible.
 
-http://daringfireball.net/projects/markdown/syntax#philosophy
+> Markdown 的目标是灵活、易读易写。
+
+官方网站： http://daringfireball.net/projects/markdown/syntax#philosophy
 
 
-## Inline/Span Elements
+## 粗体及斜体
 
-### Bold, Italic
+代码：
 
-source:
-
-    a **fat boy**, a _thin girl_
+    死**胖子**和 _Geek_ 女
 
 
-Result:
+结果：
 
-a **fat boy**, a _thin girl_
-
-
-### Link
-
-source:
-
-```
-This is [Wikipedia](http://en.wikipedia.org/wiki) link.
-```
+死**胖子**和 _Geek_ 女
 
 
-Result:
-
-This is [Wikipedia](http://en.wikipedia.org/wiki) HTML link.
+注意：英文与中文排版的习惯差异，中文不应该使用任何斜体，因为它会降低可读性。
 
 
-### Reference-style Link
+## 链接
 
-source:
+代码：
 
 ```
-This is [Wikipedia] [wp] link.
+这是 [维基百科](http://en.wikipedia.org/wiki) HTML 链接。
+```
 
-This is another [Wikipedia in English] [wp] link.
+
+结果：
+
+这是 [维基百科](http://en.wikipedia.org/wiki) HTML 链接。
+
+
+## 引用式链接
+
+代码：
+
+```
+这是 [维基百科] [wp] HTML 链接.
+
+这是 [维基百科 英文版] [wp] HTML 链接.
 
 [wp]: http://en.wikipedia.org/wiki
 ```
 
 
-Result:
+结果：
 
-This is [Wikipedia] [wp] link.
+这是 [维基百科] [wp] HTML 链接.
 
-This is another [Wikipedia in English] [wp] link.
+这是 [维基百科 英文版] [wp] HTML 链接.
 
 [wp]: http://en.wikipedia.org/wiki
 
 
-### Image
+## 图片
 
-source:
+代码：
 
 ```
-![Alt text](/path/to/img.jpg "Optional title")
+![如果图片无法显示，用此文字代替](../Kubuntu-logo.png "鼠标停留在图片上时显示的文字")
 ```
 
 
+引用不正常时的结果：
 
-## Block Elements
+![如果图片无法显示，用此文字代替](../Kubuntu-logo-not-exists.png "鼠标停留在图片上时显示的文字")
 
 
-### Header/Title
+引用正常时的结果：
 
-source:
+![如果图片无法显示，用此文字代替](../Kubuntu-logo.png "鼠标停留在图片上时显示的文字")
+
+
+## 标题
+
+代码：
 
 ```
 # header level 1
@@ -80,29 +89,27 @@ source:
 ##### header level 5
 ```
 
-
-### Source Code I
-
-Inline source code.
+结果就不显示了。
 
 
-source:
+## 高亮行内代码
+
+
+代码：
 
 ```
-it prints `hello world`.
+输出 `hello world`.
 ```
 
 
-Result:
+结果：
 
-it prints `hello world`
+输出 `hello world`
 
 
-### Source Code II
+## 高亮多行代码
 
-Multiple line source code.
-
-source:
+代码：
 
     ```
     int
@@ -113,8 +120,10 @@ source:
     }
     ```
 
+（前缀带四个空格）
+
       
-Result:
+结果：
 
 ```
 int 
@@ -126,26 +135,26 @@ main( void )
 ```
 
 
-### Table
+## 表格
 
-source:
+代码：
 
 ```
-!|| name || desc ||
+!|| 名称 || 描述 ||
 !| SIP | Session Initial Protocol |
 !| SIP-C | Session Initial Protocol compact version |
 ```
 
-Result:
+结果：
 
-|| name || desc ||
+|| 名称 || 描述 ||
 | SIP | Session Initial Protocol |
 | SIP-C | Session Initial Protocol compact version |
 
 
-## Macro
+## Graphviz/dot 宏
 
-### Graphviz/dot
+代码：
 
 ```{{{#!dot
 digraph arch {
@@ -165,6 +174,7 @@ digraph arch {
 }}}
 ```
 
+结果：
 
 {{{#!dot
 digraph arch {
@@ -185,11 +195,9 @@ digraph arch {
 
 
 
+## TeX 宏
 
-
-### TeX
-
-Source:
+代码：
 
 ```{{{#!tex
 E_k = \frac{1}{2}m_0 v^2 + \cdots
@@ -197,7 +205,7 @@ E_k = \frac{1}{2}m_0 v^2 + \cdots
 ```
 
 
-Result:
+结果：
 
 {{{
 #!tex
@@ -209,20 +217,27 @@ E = m c^2
 }}}
 
 
+## ls 宏
 
-### List files
+列出指定目录的文件列表
 
-list all files of specify path
-
-
-Source:
+代码：
 
 ```{{{#!zw
-ls("docs/", maxdepth=3)
+ls("zbox-wiki_zh_CN/", maxdepth=3)
 }}}
 ```
 
+结果：
 
-## References
+{{{#!zw
+ls("zbox-wiki_zh_CN/", maxdepth=3)
+}}}
+
+
+## 参考链接
 
  - http://daringfireball.net/projects/markdown/syntax
+
+
+
