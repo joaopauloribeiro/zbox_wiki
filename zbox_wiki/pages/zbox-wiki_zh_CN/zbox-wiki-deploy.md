@@ -2,7 +2,8 @@
 
 详情见 web.py 官方文档
 
-[https://github.com/webpy/webpy.github.com/blob/master/cookbook/fastcgi-nginx.md](https://github.com/webpy/webpy.github.com/blob/master/cookbook/fastcgi-nginx.md)
+[http://webpy.org/cookbook/fastcgi-nginx](http://webpy.org/cookbook/fastcgi-nginx)
+
 
  
 ----
