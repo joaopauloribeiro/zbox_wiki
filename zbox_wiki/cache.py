@@ -60,7 +60,7 @@ def wp_get_recent_changes_from_cache(enable_show_full_path, limit, offset):
     pg.limit = limit
     pg.url = "/~recent"
 
-    return tpl_render.canvas(config = config,
+    return tpl_render.canvas(config = config_agent.config,
                              button_path = title,
                              content = content,
                              static_files = static_file.g_global_static_files,

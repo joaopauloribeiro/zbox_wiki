@@ -290,7 +290,7 @@ def wp_stat():
     text = stat_tpl % (int(page_count), int(folder_count))
     content = mdutils.md2html(text)
 
-    return tpl_render.canvas(config,
+    return tpl_render.canvas(config = config_agent.config,
                              button_path = None,
                              content = content,
                              req_path = None,
