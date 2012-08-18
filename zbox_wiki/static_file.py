@@ -28,24 +28,25 @@ def get_global_static_files(enable_auto_toc = None,
     if not reader_mode:
         reader_mode = config_agent.config.getboolean("frontend", "enable_reader_mode")
 
+    theme_name = config_agent.config.get("frontend", "theme")
     static_files = ""
 
     css_files = ("zw-base.css",)
     for i in css_files:
-        path = os.path.join("/static", "css", i)
+        path = os.path.join("/static", theme_name, "css", i)
         static_files = append_static_file(static_files, path, file_type = "css")
 
     if reader_mode:
-        path = os.path.join("/static", "css", "zw-reader.css")
+        path = os.path.join("/static", theme_name, "css", "zw-reader.css")
         static_files = append_static_file(static_files, path, file_type = "css")
 
     if enable_auto_toc:
-        path = os.path.join("/static", "css", "zw-toc.css")
+        path = os.path.join("/static", theme_name, "css", "zw-toc.css")
         static_files = append_static_file(static_files, path, file_type = "css")
 
 
     if enable_highlight:
-        path = os.path.join("/static", "js", "prettify", "prettify.css")
+        path = os.path.join("/static", theme_name, "js", "prettify", "prettify.css")
         static_files = append_static_file(static_files, path, file_type = "css", add_newline = True)
 
 
@@ -54,26 +55,26 @@ def get_global_static_files(enable_auto_toc = None,
     js_files = ("jquery.js", "jquery-ui.js")
     static_files += "\n"
     for i in js_files:
-        path = os.path.join("/static", "js", i)
+        path = os.path.join("/static", theme_name, "js", i)
         static_files = append_static_file(static_files, path, file_type = "js")
 
     js_files = ("zw-base.js", )
     static_files += "\n"
     for i in js_files:
-        path = os.path.join("/static", "js", i)
+        path = os.path.join("/static", theme_name, "js", i)
         static_files = append_static_file(static_files, path, file_type = "js")
 
 
     if enable_auto_toc:
         static_files += "\n"
-        path = os.path.join("/static", "js", "zw-toc.js")
+        path = os.path.join("/static", theme_name, "js", "zw-toc.js")
         static_files = append_static_file(static_files, path, file_type = "js")
 
     if enable_highlight:
         static_files += "\n"
         js_files = (os.path.join("prettify", "prettify.js"), "highlight.js")
         for i in js_files:
-            path = os.path.join("/static", "js", i)
+            path = os.path.join("/static", theme_name, "js", i)
             static_files = append_static_file(static_files, path, file_type = "js")
 
     return static_files
