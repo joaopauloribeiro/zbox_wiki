@@ -63,7 +63,8 @@ Please report bug to shuge.lee <AT> GMail.
 """
 
 
-parser = argparse.ArgumentParser(description = "create/upgrade ZBox Wiki instance", epilog = "Please report bug to shuge.lee <AT> GMail.")
+parser = argparse.ArgumentParser(description = "create/upgrade ZBox Wiki instance", 
+                                 epilog = "Please report bug to shuge.lee <AT> GMail.")
 parser.add_argument("--create", help = "full path of instance")
 parser.add_argument("--upgrade", help = "full path of instance")
 
@@ -98,10 +99,12 @@ def cp_fcgi_scripts(instance_full_path):
         conf_file_name = "nginx-debian.conf"
 
         nginx_conf_tpl = os.path.join(instance_full_path, "pages", "zbox-wiki", conf_file_name)
-        buf = file(nginx_conf_tpl).read()
+        with open(nginx_conf_tpl) as f:
+            buf = f.read()
         buf = buf.replace("/path/to/zw_instance", instance_full_path)
         nginx_conf_path = os.path.join(instance_full_path, conf_file_name)
-        file(nginx_conf_path, "w").write(buf)
+        with open(nginx_conf_path, "w") as f:
+            f.write(buf)
 
 
 def action_create(instance_full_path):
@@ -127,9 +130,12 @@ def action_create(instance_full_path):
 
         os.mkdir(src_full_path)
 
+    src = os.path.join(ZW_MOD_FULL_PATH, "default.cfg")
+    dst = os.path.join(instance_full_path, "default.cfg")
+    shutil.copyfile(src, dst)
+    os.chmod(dst, 0754)
 
     cp_fcgi_scripts(instance_full_path)
-
     print_zwd_help_msg(instance_full_path)
 
 
