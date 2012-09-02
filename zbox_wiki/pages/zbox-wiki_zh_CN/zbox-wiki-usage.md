@@ -72,22 +72,22 @@ Zbox 渲染每个 Markdown 文件为 HTML 文件时，会遵循以下规则：
 
 如果您想使用自定义 CSS 的同时包含系统默认 CSS，则添加以下内容到某个页面所在目录的主 CSS 文件里面：
 
-    @import(/static/css/zw-base.css);
-    @import(/static/css/zw-reader.css);
-    @import(/static/css/zw-toc.css);
-    @import(/static/js/prettify/prettify.css");
+    @import url(/static/default/css/zw-base.css);
+    @import url(/static/default/css/zw-reader.css);
+    @import url(/static/default/css/zw-toc.css);
+    @import url(/static/default/js/prettify/prettify.css");
 
 
-类似地，将以下内容添加到某个页面对应的 Markdown 文件里面：
+类似地，将以下内容添加到某个页面对应的 Markdown 文件顶部(每行前面不带空格)：
 
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/default/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/default/js/jquery-ui.js"></script>
 
-    <script type="text/javascript" src="/static/js/zw-base.js"></script>
-    <script type="text/javascript" src="/static/js/zw-toc.js"></script>
+    <script type="text/javascript" src="/static/default/js/zw-base.js"></script>
+    <script type="text/javascript" src="/static/default/js/zw-toc.js"></script>
 
-    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
-    <script type="text/javascript" src="/static/js/highlight.js"></script>
+    <script type="text/javascript" src="/static/default/js/prettify/prettify.js"></script>
+    <script type="text/javascript" src="/static/default/js/highlight.js"></script>
 
 
 ## 示例：使用 Zbox Wiki 作为 个人博客

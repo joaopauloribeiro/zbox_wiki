@@ -71,22 +71,22 @@ If you want to include both CSS/JavaScript files in the folder of specify page a
 
 append these lines into your CSS file header
 
-    @import(/static/css/zw-base.css);
-    @import(/static/css/zw-reader.css);
-    @import(/static/css/zw-toc.css);
-    @import(/static/js/prettify/prettify.css");
+    @import url(/static/default/css/zw-base.css);
+    @import url(/static/default/css/zw-reader.css);
+    @import url(/static/default/css/zw-toc.css);
+    @import url(/static/default/js/prettify/prettify.css");
 
 
-append these lines into your Markdown page
+insert these lines into your Markdown page header
 
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/default/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/default/js/jquery-ui.js"></script>
 
-    <script type="text/javascript" src="/static/js/zw-base.js"></script>
-    <script type="text/javascript" src="/static/js/zw-toc.js"></script>
+    <script type="text/javascript" src="/static/default/js/zw-base.js"></script>
+    <script type="text/javascript" src="/static/default/js/zw-toc.js"></script>
 
-    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
-    <script type="text/javascript" src="/static/js/highlight.js"></script>
+    <script type="text/javascript" src="/static/default/js/prettify/prettify.js"></script>
+    <script type="text/javascript" src="/static/default/js/highlight.js"></script>
 
 
 ## Using Zbox Wiki as Personal Blog

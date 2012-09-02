@@ -1,6 +1,6 @@
 # Example Graphviz in Zbox Wiki
 
-{{{#!dot
+{{{#!graphviz
 digraph arch {
     rankdir = "LR"
 
