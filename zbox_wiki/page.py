@@ -16,7 +16,7 @@ tpl_render = web.template.render(folder_templates_full_path)
 
 
 def get_dot_idx_content_by_full_path(full_path):
-    dot_idx_full_path = os.path.join(full_path, ".index.md")
+    dot_idx_full_path = os.path.join(full_path, "index.md")
     return commons.cat(dot_idx_full_path)
 
 
@@ -55,7 +55,7 @@ def delete_page_file_by_full_path(full_path):
         os.remove(full_path)
         return True
     elif os.path.isdir(full_path):
-        idx_dot_md = os.path.join(full_path, ".index.md")
+        idx_dot_md = os.path.join(full_path, "index.md")
         os.remove(idx_dot_md)
         return True
     return False
@@ -111,7 +111,7 @@ def update_page_by_req_path(req_path, content):
     if not os.path.isdir(full_path):
         web.utils.safewrite(full_path, content.replace("\r\n", "\n"))
     else:
-        idx_dot_md_full_path = os.path.join(full_path, ".index.md")
+        idx_dot_md_full_path = os.path.join(full_path, "index.md")
         web.utils.safewrite(idx_dot_md_full_path, content.replace("\r\n", "\n"))
 
 
@@ -255,8 +255,8 @@ def wp_source(req_path):
     full_path = mdutils.req_path_to_full_path(req_path)
 
     if os.path.isdir(full_path):
-        a = os.path.join(full_path, ".index.md")
-        b = os.path.join(full_path, ".index.markdown")
+        a = os.path.join(full_path, "index.md")
+        b = os.path.join(full_path, "index.markdown")
         if os.path.exists(a):
             web.header("Content-Type", "text/plain; charset=UTF-8")
             return commons.cat(a)
