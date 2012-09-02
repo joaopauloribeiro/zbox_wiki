@@ -90,7 +90,7 @@ def trac_wiki_tex2md(text, save_to_prefix):
     return p_obj.sub(code_repl, text)
 
 def trac_wiki_dot2md(text, save_to_prefix):
-    shebang_p = "#!dot"
+    shebang_p = "#!graphviz"
     code_p = '(?P<code>[^\f\v]+?)'
     code_block_p = "^\{\{\{[\s]*%s*%s[\s]*\}\}\}" % (shebang_p, code_p)
     p_obj = re.compile(code_block_p, re.MULTILINE)
