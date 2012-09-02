@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 import ConfigParser
-import difflib
-import filecmp
-import glob
 import logging
 import os
 import platform
@@ -63,10 +60,17 @@ Please report bug to shuge.lee <AT> GMail.
 """
 
 
-parser = argparse.ArgumentParser(description = "create/upgrade ZBox Wiki instance", 
+parser = argparse.ArgumentParser(description = "create/upgrade ZBox Wiki instance",
                                  epilog = "Please report bug to shuge.lee <AT> GMail.")
 parser.add_argument("--create", help = "full path of instance")
 parser.add_argument("--upgrade", help = "full path of instance")
+
+
+def get_ans(msg, expect_ans_list = ("Y", "y", "N", "n", "A", "a")):
+    ans = raw_input(msg)
+    while ans not in expect_ans_list:
+        print "expected answer in", expect_ans_list
+    return ans
 
 
 def print_zwd_help_msg(instance_full_path):
@@ -132,42 +136,53 @@ def action_create(instance_full_path):
 
     src = os.path.join(ZW_MOD_FULL_PATH, "default.cfg")
     dst = os.path.join(instance_full_path, "default.cfg")
-    shutil.copyfile(src, dst)
+    if os.path.exists(dst):
+        msg = dst + "already exists, recover it from default \n"
+        ans = get_ans(msg, expect_ans_list = ["Y", "y", "N", "n"])
+        if ans in ["Y", "y"]:
+            shutil.copyfile(src, dst)
+    else:
+        shutil.copyfile(src, dst)
     os.chmod(dst, 0754)
 
     cp_fcgi_scripts(instance_full_path)
     print_zwd_help_msg(instance_full_path)
 
 
-def diff_nuar(a_file_path, b_file_path):
-    fromlines = file(a_file_path).readlines()
-    tolines = file(b_file_path).readlines()
-
-    return list(difflib.context_diff(fromlines, tolines, fromfile = a_file_path, tofile = b_file_path))
-
-
 def action_upgrace(instance_full_path):
     folders = ("static", "templates")
-    for i in folders:
-        a = os.path.join(instance_full_path, i)
-        b = os.path.join(ZW_MOD_FULL_PATH, i)
-        cmp_obj = filecmp.dircmp(a, b, hide = [os.curdir, os.pardir] + glob.glob('.*'))
+    yes_to_all = False
 
-        for j in cmp_obj.diff_files:
-            msg = "%s in instance has changed, recover it from default? [Y/n]" % j
-            ans = raw_input(msg)
-            if ans in ("Y", "y"):
-                src = os.path.join(ZW_MOD_FULL_PATH, i, j)
-                dst = os.path.join(instance_full_path, i, j)
-                shutil.copy(src, dst)
+    for i in folders:
+        src = os.path.join(ZW_MOD_FULL_PATH, i)
+        dst = os.path.join(instance_full_path, i)
+
+        if os.path.exists(dst):
+            msg = "%s already exists, recover it from default?  [Y]es / [N]o / yes to [A]ll " % dst
+            if yes_to_all:
+                shutil.rmtree(dst)
+                
+                print "copy %s -> %s" % (src, dst)
+                shutil.copytree(src, dst)
+            else:
+                ans = get_ans(msg)
+                if ans in ["A", "a"]:
+                    yes_to_all = True
+                if ans in ["Y", "y", "A", "a"]:
+                    shutil.rmtree(dst)
+                    
+                    print "copy %s -> %s" % (src, dst)
+                    shutil.copytree(src, dst)
+        else:
+            print "copy %s -> %s" % (src, dst)
+            shutil.copytree(src, dst)
 
 
     instance_config_file = os.path.join(instance_full_path, "default.cfg")
     default_config_file = os.path.join(ZW_MOD_FULL_PATH, "default.cfg")
 
     if not os.path.exists(instance_config_file):
-        msg = "%s does not exists, recover it from default"
-        logging.info(msg)
+        print "copy %s -> %s" % (default_config_file, instance_config_file)
         shutil.copy(default_config_file, instance_config_file)
     else:
         try:
@@ -177,6 +192,8 @@ def action_upgrace(instance_full_path):
             ans = raw_input(msg)
             if ans in ("Y", "y"):
                 shutil.copy(default_config_file, instance_config_file)
+
+    print_zwd_help_msg(instance_full_path)
 
 
 if __name__ == "__main__":
