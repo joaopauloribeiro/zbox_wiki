@@ -52,15 +52,11 @@ kwargs = dict(
     package_data = {
       "zbox_wiki" : [
           "default.cfg",
+          "pages/Kubuntu-logo.png",
           "pages/robots.txt",
-          "pages/.*.md",
           "pages/*.md",
-          "pages/zbox-wiki/.*.md",
           "pages/zbox-wiki/*.md",
-          "pages/zbox-wiki/nginx-*.conf",
-          "pages/zbox-wiki_zh_CN/.*.md",
           "pages/zbox-wiki_zh_CN/*.md",
-          "pages/zbox-wiki_zh_CN/nginx-*.conf",
           "scripts/*.py",
           "scripts/*.sh",
           "static/css/*.css",

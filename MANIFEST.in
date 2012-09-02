@@ -1,4 +1,5 @@
 include zbox_wiki/default.cfg
+include zbox_wiki/pages/Kubuntu-logo.png
 include zbox_wiki/pages/robots.txt
 include zbox_wiki/pages/*.md
 include zbox_wiki/pages/zbox-wiki/*.md
