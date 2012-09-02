@@ -12,6 +12,11 @@
     zwadmin.py --create /tmp/my_blog
 
 
+升级一个 Zbox Wiki 实例
+
+    zwadmin.py --upgrade /tmp/my_blog
+
+
 理解实例的文件布局
 
     $ find /tmp/my_blog -maxdepth 1

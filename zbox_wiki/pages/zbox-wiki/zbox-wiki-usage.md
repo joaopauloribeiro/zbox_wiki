@@ -11,6 +11,11 @@ Create a Zbox Wiki instance
     zwadmin.py --create /tmp/my_blog
 
 
+Upgrade a Zbox Wiki instance
+
+    zwadmin.py --upgrade /tmp/my_blog
+
+
 Understand the layout of instance
 
     $ find /tmp/my_blog -maxdepth 1
