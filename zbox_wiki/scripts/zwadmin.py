@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import ConfigParser
-import logging
 import os
 import platform
 import shutil
@@ -8,8 +7,6 @@ import shutil
 from commons import argparse
 import zbox_wiki
 
-
-logging.getLogger().setLevel(logging.INFO)
 
 
 ZW_MOD_FULL_PATH = zbox_wiki.__path__[0]
@@ -70,6 +67,7 @@ def get_ans(msg, expect_ans_list = ("Y", "y", "N", "n", "A", "a")):
     ans = raw_input(msg)
     while ans not in expect_ans_list:
         print "expected answer in", expect_ans_list
+        ans = raw_input(msg)
     return ans
 
 
@@ -110,6 +108,38 @@ def cp_fcgi_scripts(instance_full_path):
         with open(nginx_conf_path, "w") as f:
             f.write(buf)
 
+def fix_folder_pages_sym_link(instance_full_path):
+    src = os.path.join(instance_full_path, "pages")
+    dst = os.path.join(instance_full_path, "static", "pages")
+
+    if os.path.islink(dst):
+        got = os.readlink(dst)
+        if got != src:
+            msg = "expected %s -> %s, got %s" % (src, dst, got)
+            print msg
+            os.remove(dst)
+
+            msg = "link %s -> %s" % (src, dst)
+            print msg
+            os.symlink(src, dst)
+
+    elif os.path.isdir(dst) and (not os.path.islink(dst)):
+        msg = "expected %s is a symbolic link, got a directory, delete them" % dst
+        print msg
+        shutil.rmtree(dst)
+
+        msg = "link %s -> %s" % (src, dst)
+        print msg
+        os.symlink(src, dst)
+
+    elif os.path.isfile(dst):
+        msg = "expected %s is a symbolic link, got a file, delete it" % dst
+        print msg
+        os.remove(dst)
+
+        msg = "link %s -> %s" % (src, dst)
+        print msg
+        os.symlink(src, dst)
 
 def action_create(instance_full_path):
     for folder_name in ("static", "templates", "pages"):
@@ -117,33 +147,33 @@ def action_create(instance_full_path):
         dst = os.path.join(instance_full_path, folder_name)
 
         if os.path.exists(dst):
-            msg = dst + " already exists, skip \n"
-            logging.warn(msg)
+            msg = "%s already exists, skip" % dst
+            print msg
             continue
-
         shutil.copytree(src, dst)
 
+    fix_folder_pages_sym_link(instance_full_path)
 
     for folder_name in ("tmp", "sessions"):
         src_full_path = os.path.join(instance_full_path, folder_name)
 
         if os.path.exists(src_full_path):
-            msg = src_full_path + "already exists, skip \n"
-            logging.warn(msg)
+            msg = "%s already exists, skip" % src_full_path
+            print msg
             continue
-
         os.mkdir(src_full_path)
 
     src = os.path.join(ZW_MOD_FULL_PATH, "default.cfg")
     dst = os.path.join(instance_full_path, "default.cfg")
     if os.path.exists(dst):
-        msg = dst + "already exists, recover it from default \n"
+        msg = "%s already exists, recover it from default? [Y]es / [N]o " % dst
         ans = get_ans(msg, expect_ans_list = ["Y", "y", "N", "n"])
         if ans in ["Y", "y"]:
+            print "copy %s -> %s" % (src, dst)
             shutil.copyfile(src, dst)
     else:
         shutil.copyfile(src, dst)
-    os.chmod(dst, 0754)
+    os.chmod(dst, 0644)
 
     cp_fcgi_scripts(instance_full_path)
     print_zwd_help_msg(instance_full_path)
@@ -176,6 +206,8 @@ def action_upgrace(instance_full_path):
         else:
             print "copy %s -> %s" % (src, dst)
             shutil.copytree(src, dst)
+
+    fix_folder_pages_sym_link(instance_full_path)
 
 
     instance_config_file = os.path.join(instance_full_path, "default.cfg")
