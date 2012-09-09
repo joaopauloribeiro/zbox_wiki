@@ -44,6 +44,8 @@ kwargs = dict(
         "zbox_wiki",
         "zbox_wiki.markdown",
         "zbox_wiki.markdown.extensions",
+
+        # ship web.py with this project for walking around custom static files folder bug
         "zbox_wiki.web",
         "zbox_wiki.web.contrib",
         "zbox_wiki.web.wsgiserver",

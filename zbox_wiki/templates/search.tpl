@@ -1,17 +1,16 @@
-$def with (keywords, content, static_files)
-<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
+$def with (static_files, title, keywords, content)
+<!-- DO NOT CHANGE THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Search</title>
+    <title> $title </title>
 
     <style>
     #keywords { width : 400px; }
     </style>
 
-    $if static_files:
-        $static_files
+    $static_files
 
 </head>
 <body>
@@ -19,11 +18,9 @@ $def with (keywords, content, static_files)
 
 <div id="container">
 
-
 <div id="quick_links">
-    <a href="/">Home</a>
+    <a href="/"> Home </a>
 </div>
-
 
 
 <h2>Search</h2>
@@ -39,7 +36,6 @@ $def with (keywords, content, static_files)
 <div id="result">
     $content
 </div>
-
 
 </div>
 

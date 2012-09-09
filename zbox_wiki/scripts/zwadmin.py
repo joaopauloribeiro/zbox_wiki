@@ -8,7 +8,6 @@ from commons import argparse
 import zbox_wiki
 
 
-
 ZW_MOD_FULL_PATH = zbox_wiki.__path__[0]
 
 IS_DEB_BASED = platform.linux_distribution()[0].lower()
@@ -218,7 +217,7 @@ def action_upgrace(instance_full_path):
         shutil.copy(default_config_file, instance_config_file)
     else:
         try:
-            zbox_wiki.load_config(paths = [instance_config_file])
+            zbox_wiki.config_agent.load_config(paths = [instance_config_file])
         except ConfigParser.ParsingError:
             msg = "parsing %s failed, recover it from default? [Y/n]" % instance_config_file
             ans = raw_input(msg)

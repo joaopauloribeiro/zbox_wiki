@@ -1,14 +1,12 @@
-$def with (req_path, title, content, create_new = False, static_files=None)
-<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
+$def with (config_agent, static_files, req_path, title, content, create_new, **view_settings)
+<!-- DO NOT CHANGE THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Editing $req_path</title>
+    <title> $title </title>
 
-    $if static_files:
-        $static_files
-
+    $static_files
 
 </head>
 <body>
@@ -21,7 +19,7 @@ $def with (req_path, title, content, create_new = False, static_files=None)
         <div id="path-widget">
             $if create_new:
                 <p>Create</p> 
-                <label for="path">Path:</label>
+                <label for="path"> Path :</label>
                 <input type="text" id="path" name="path" value="$req_path" />
             $else:
                 <p>Update path:</p>
@@ -29,7 +27,7 @@ $def with (req_path, title, content, create_new = False, static_files=None)
         </div>
 
         <div class="input-widget">
-            <label for="content">Content</label>
+            <label for="content"> Content </label>
             <textarea cols="80" rows="20" id="content" name="content">$content</textarea>
         </div>
 
