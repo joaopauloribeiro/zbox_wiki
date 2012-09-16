@@ -87,28 +87,6 @@ def wp_create(config_agent, req_path, path, content):
     web.seeother(path)
 
 
-def wp_update(config_agent, req_path, new_content):
-    # NOTICE: if req_path == `users/`, full_path will be `/path/to/users/`,
-    #         its parent will be `/path/to/users`.
-    folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
-    local_full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
-
-    if local_full_path.endswith((".md", ".markdown")):
-        folder_parent = os.path.dirname(local_full_path)
-        if not os.path.exists(folder_parent):
-            os.makedirs(folder_parent)
-
-    content = new_content.replace("\r\n", "\n")
-
-    if not os.path.isdir(local_full_path):
-        web.utils.safewrite(local_full_path, content)
-    else:
-        filename = os.path.join(local_full_path, "index.md")
-        web.utils.safewrite(filename, content)
-
-    web.seeother("/%s" % req_path)
-
-
 def wp_read(config_agent, tpl_render, req_path):
     view_settings = get_view_settings(config_agent)
 
@@ -117,7 +95,7 @@ def wp_read(config_agent, tpl_render, req_path):
     static_file_prefix = static_file.get_static_file_prefix_by_local_full_path(config_agent = config_agent,
                                                                                local_full_path = local_full_path,
                                                                                req_path = req_path)
-    req_uri = web.ctx.environ["REQUEST_URI"]
+    path_info = web.ctx.environ["PATH_INFO"]
 
     HOME_PAGE = ""
     if req_path != HOME_PAGE and view_settings["button_mode_path"]:
@@ -129,34 +107,35 @@ def wp_read(config_agent, tpl_render, req_path):
         view_settings["show_quick_links"] = False
 
     if os.path.isfile(local_full_path):
+        # os.path.exists(local_full_path)
         buf = commons.shutils.cat(local_full_path)
         buf = commons.strutils.strip_bom(buf)
 
     elif os.path.isdir(local_full_path):
-        # try /path/to/folder/index
-        a = os.path.join(local_full_path, "index.md")
-        b = os.path.join(local_full_path, "index.markdown")
-        if os.path.exists(a) or os.path.exists(b):
-            fixed_req_path = os.path.join(req_uri, "index")
-            web.seeother(fixed_req_path)
-            return
-        elif req_path == HOME_PAGE:
-            # /index does not exists
-            fixed_req_path = os.path.join(req_uri, "~all")
-            web.seeother(fixed_req_path)
-            return
+        # os.path.exists(local_full_path)
+        if req_path == HOME_PAGE:
+            a = os.path.join(local_full_path, "index.md")
+            b = os.path.join(local_full_path, "index.markdown")
+            if os.path.exists(a) or os.path.exists(b):
+                fixed_req_path = os.path.join(path_info, "index")
+                return web.seeother(fixed_req_path)
+            else:
+                fixed_req_path = os.path.join(path_info, "~all")
+                return web.seeother(fixed_req_path)
         else:
-            # try /path/to/folder/*
+            # listdir /path/to/folder/*
             buf = shell.get_page_file_list_by_req_path(folder_pages_full_path = folder_pages_full_path, req_path = req_path)
             if buf:
                 buf = mdutils.sequence_to_unorder_list(buf.split("\n"), **view_settings)
+            else:
+                buf = "folder `%s` exists, but there is no files" % path_info
     else:
-        if req_uri.endswith("/"):
-            fixed_req_path = req_uri + "index?action=edit"
+        # not os.path.exists(local_full_path)
+        if path_info.endswith("/"):
+            fixed_req_path = path_info + "index?action=update"
         else:
-            fixed_req_path = req_uri + "?action=edit"
-        web.seeother(fixed_req_path)
-        return
+            fixed_req_path = path_info + "?action=update"
+        return web.seeother(fixed_req_path)
 
     title = mdutils.get_title_from_md(local_full_path = local_full_path)
     content = mdutils.md2html(config_agent = config_agent,
@@ -181,12 +160,8 @@ def wp_read(config_agent, tpl_render, req_path):
     return buf
 
 
-def wp_edit(config_agent, tpl_render, req_path):
-    view_settings = get_view_settings(config_agent)
-    view_settings["auto_toc"] = False
-    view_settings["highlight_code"] = False
-    view_settings["reader_mode"] = False
-
+def wp_update(config_agent, tpl_render, req_path):
+    view_settings = get_view_settings(config_agent, simple = True)
     static_files = static_file.get_global_static_files(**view_settings)
 
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
@@ -195,19 +170,19 @@ def wp_edit(config_agent, tpl_render, req_path):
     title = "Editing %s" % req_path
     create_new = False
 
+    if local_full_path.endswith("/"):
+        msg = "not allow to edit path/to/folder, using path/to/folder/index instead"
+        raise web.BadRequest(message = msg)
+
+    # os.path.exists(local_full_path)
     if os.path.isfile(local_full_path):
         buf = commons.shutils.cat(local_full_path)
-    elif os.path.isdir(local_full_path):
-        dot_idx_full_path = os.path.join(local_full_path, "index.md")
-        buf = commons.shutils.cat(dot_idx_full_path) or ""
-    elif not os.path.exists(local_full_path):
+    else:
+        # not os.path.exists(local_full_path)
         create_new = True
         buf = ""
-    else:
-        msg = "request path %s is invalid" % req_path
-        raise web.BadRequest(msg)
 
-    return tpl_render.editor(config_agent = config_agent,
+    return tpl_render.update(config_agent = config_agent,
                              static_files = static_files,
                              req_path = req_path,
                              create_new = create_new,
@@ -215,15 +190,29 @@ def wp_edit(config_agent, tpl_render, req_path):
                              content = buf,
                              **view_settings)
 
-def wp_rename(config_agent, tpl_render, req_path):
-    view_settings = get_view_settings(config_agent)
-    static_files = static_file.get_global_static_files(**view_settings)
+def wp_update_post(config_agent, req_path, new_content):
+    path_info = web.ctx.environ["PATH_INFO"]
 
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
-    local_full_path = mdutils.req_path_to_local_full_path(req_path = req_path,
-                                                          folder_pages_full_path = folder_pages_full_path)
-    if not os.path.exists(local_full_path):
-        raise web.NotFound()
+    local_full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
+
+    folder_parent = os.path.dirname(local_full_path)
+    if not os.path.exists(folder_parent):
+        os.makedirs(folder_parent)
+
+    content = new_content.replace("\r\n", "\n")
+
+    with open(local_full_path, "w") as f:
+        f.write(content)
+
+    cache.update_recent_change_cache(folder_pages_full_path)
+
+    return web.seeother(path_info)
+
+
+def wp_rename(config_agent, tpl_render, req_path):
+    view_settings = get_view_settings(config_agent, simple = True)
+    static_files = static_file.get_global_static_files(**view_settings)
 
     title = "Rename %s" % req_path
     old_path = req_path
@@ -235,26 +224,34 @@ def wp_rename(config_agent, tpl_render, req_path):
                              **view_settings)
 
 def wp_rename_post(config_agent, tpl_render, req_path, new_path):
-    old_path = req_path
-    view_settings = get_view_settings(config_agent)
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
 
+    old_path = req_path
     old_full_path = mdutils.req_path_to_local_full_path(old_path, folder_pages_full_path)
     new_full_path = mdutils.req_path_to_local_full_path(new_path, folder_pages_full_path)
 
-    if (req_path in consts.g_special_paths) or (not os.path.exists(old_full_path)):
-        raise web.BadRequest()
+    if old_full_path == new_full_path:
+        return web.seeother("/%s" % new_path)
+    elif not os.path.exists(old_full_path):
+        msg = "old %s doesn't exists" % old_full_path
+        raise web.BadRequest(msg)
 
-    if os.path.exists(new_full_path):
-        title = "Rename %s" % req_path
-        err_info = "WARNING: The page %s already exists" % new_full_path
-        static_files = static_file.get_global_static_files(**view_settings)
-        return tpl_render.rename(config_agent = config_agent,
-                                 static_files = static_files,
-                                 title = title,
-                                 old_path = old_path,
-                                 err_info = err_info,
-                                 **view_settings)
+    msg = """<pre>
+allow
+    file -> new_file
+    folder -> new_folder
+
+not allow
+    file -> new_folder
+    folder -> new_file
+</pre>"""
+
+    if os.path.isfile(old_full_path):
+        if new_full_path.endswith("/"):
+            raise web.BadRequest(msg)
+    elif os.path.isdir(old_full_path):
+        if not new_full_path.endswith("/"):
+            raise web.BadRequest(msg)
 
     parent = os.path.dirname(new_full_path)
     if not os.path.exists(parent):
@@ -266,11 +263,9 @@ def wp_rename_post(config_agent, tpl_render, req_path, new_path):
     cache.update_recent_change_cache(folder_pages_full_path)
 
     if os.path.isfile(new_full_path):
-        web.seeother("/%s" % new_path)
-        return
+        return web.seeother("/%s" % new_path)
     elif os.path.isdir(new_full_path):
-        web.seeother("/%s/" % new_path)
-        return
+        return web.seeother("/%s/" % new_path)
     else:
         raise web.BadRequest()
 
@@ -278,38 +273,35 @@ def wp_delete(config_agent, tpl_render, req_path):
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
     local_full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
 
-    delete_page_file_by_full_path(local_full_path)
+    if os.path.isfile(local_full_path):
+        redirect_to = os.path.dirname(local_full_path)
+        delete_page_file_by_full_path(local_full_path)
+    elif os.path.isdir(local_full_path):
+        buf = commons.strutils.rstrip(local_full_path, "/")
+        redirect_to = os.path.dirname(buf)
+        delete_page_file_by_full_path(local_full_path)
+    else:
+        raise web.NotFound()
+
     cache.update_recent_change_cache(folder_pages_full_path)
     cache.update_all_pages_list_cache(folder_pages_full_path)
 
-    web.seeother("/")
-    return
+    return web.seeother(redirect_to)
 
 
 def wp_source(config_agent, tpl_render, req_path):
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
     local_full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
 
-    if os.path.isdir(local_full_path):
-        a = os.path.join(local_full_path, "index.md")
-        b = os.path.join(local_full_path, "index.markdown")
-
-        if os.path.exists(a):
-            buf = commons.shutils.cat(a)
-        elif os.path.exists(b):
-            buf = commons.shutils.cat(b)
-        else:
-            buf = "folder doesn't providers source code in Markdown"
-
-        web.header("Content-Type", "text/plain; charset=UTF-8")
-        return buf
-
-    elif os.path.isfile(local_full_path):
+    if os.path.isfile(local_full_path):
         web.header("Content-Type", "text/plain; charset=UTF-8")
         buf = commons.shutils.cat(local_full_path)
         return buf
-
-    raise web.NotFound()
+    elif os.path.isdir(local_full_path):
+        msg = "folder doesn't providers source in Markdown, using file instead"
+        raise web.BadRequest(msg)
+    else:
+        raise web.NotFound()
 
 _stat_tpl = """# Stat
 
@@ -357,7 +349,7 @@ def wp_new(config_agent, req_path, tpl_render):
 
     title = "Create %s" % req_path
 
-    return tpl_render.editor(config_agent = config_agent,
+    return tpl_render.update(config_agent = config_agent,
                              static_files = static_files,
                              req_path = "",
                              title = title,
@@ -366,7 +358,7 @@ def wp_new(config_agent, req_path, tpl_render):
                              **view_settings)
 
 
-def get_view_settings(config_agent):
+def get_view_settings(config_agent, simple = False):
     theme_name = config_agent.config.get("frontend", "theme_name")
 
     c_fp = config_agent.config.get("frontend", "show_full_path")
@@ -386,6 +378,11 @@ def get_view_settings(config_agent):
     button_mode_path = config_agent.config.getboolean("frontend", "button_mode_path")
     show_toolbox = True
     show_view_source_button = config_agent.config.getboolean("frontend", "show_view_source_button")
+
+    if simple:
+        auto_toc = False
+        reader_mode = False
+        highlight_code = False
 
     settings = dict(theme_name = theme_name,
                     show_full_path = show_full_path,

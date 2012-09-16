@@ -86,8 +86,8 @@ class WikiPage(object):
 
         if action == "read":
             return page.wp_read(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
-        elif action == "edit":
-            return page.wp_edit(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
+        elif action == "update":
+            return page.wp_update(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "rename":
             return page.wp_rename(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "delete":
@@ -104,26 +104,24 @@ class WikiPage(object):
 
         inputs = web.input()
         action = inputs.get("action")
-        if (not action) or (action not in ("edit", "rename")):
+        if (not action) or (action not in ("update", "rename")):
             raise web.BadRequest()
 
         new_content = inputs.get("content")
         new_content = web.utils.safestr(new_content)
 
-        if action == "edit":
-            if (req_path in consts.g_special_paths) or (req_path in consts.g_redirect_paths):
+        if action == "update":
+            if (req_path in consts.g_special_paths) or (req_path in consts.g_redirect_paths) or req_path.endswith("/"):
                 raise web.BadRequest()
 
-            page.wp_update(config_agent = config_agent, req_path = req_path, new_content = new_content)
-            return
+            return page.wp_update_post(config_agent = config_agent, req_path = req_path, new_content = new_content)
 
         elif action == "rename":
             new_path = inputs.get("new_path")
             if (req_path in consts.g_special_paths) or (req_path in consts.g_redirect_paths) or (not new_path):
                 raise web.BadRequest()
 
-            page.wp_rename_post(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path, new_path = new_path)
-            return
+            return page.wp_rename_post(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path, new_path = new_path)
 
         url = os.path.join("/", req_path)
         web.redirect(url)
@@ -200,8 +198,7 @@ class SpecialWikiPage(object):
             else:
                 latest_req_path = "/"
 
-            web.seeother(latest_req_path)
-            return
+            return web.seeother(latest_req_path)
 
         elif req_path == "~new":
             buf_path = inputs.get("path")

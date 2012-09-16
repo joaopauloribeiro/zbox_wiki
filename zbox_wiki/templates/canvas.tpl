@@ -57,7 +57,7 @@ $if view_settings["show_toolbox"]:
         $if not config.getboolean("main", "readonly"):
             <a href="/$req_path?action=delete"> Delete </a>
             <a href="/$req_path?action=rename"> Rename </a>
-            <a href="/$req_path?action=edit"> Edit </a>
+            <a href="/$req_path?action=update"> Update </a>
 
     </div>
 

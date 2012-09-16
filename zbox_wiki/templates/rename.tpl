@@ -20,6 +20,9 @@ $def with (config_agent, static_files, title, old_path, err_info = "", **view_se
 
 <h2> Rename: $old_path </h2>
 
+$if err_info:
+    <div id="error_msg"> $err_info </div>
+
 <div id="rename">
     <form method="POST" accept-charset="utf-8">
         New name: <input type="text" value="$old_path" name="new_path" id="new_path" /><br />
