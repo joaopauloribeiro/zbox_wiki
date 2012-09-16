@@ -273,12 +273,13 @@ def wp_delete(config_agent, tpl_render, req_path):
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
     local_full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
 
+    path_info = web.ctx.environ["PATH_INFO"]
+
     if os.path.isfile(local_full_path):
-        redirect_to = os.path.dirname(local_full_path)
+        redirect_to = os.path.dirname(path_info)
         delete_page_file_by_full_path(local_full_path)
     elif os.path.isdir(local_full_path):
-        buf = commons.strutils.rstrip(local_full_path, "/")
-        redirect_to = os.path.dirname(buf)
+        redirect_to = os.path.dirname(commons.strutils.rstrip(path_info, "/"))
         delete_page_file_by_full_path(local_full_path)
     else:
         raise web.NotFound()
