@@ -91,7 +91,7 @@ class WikiPage(object):
         elif action == "rename":
             return page.wp_rename(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "delete":
-            return page.wp_delete(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
+            return page.wp_de1lete(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "source":
             return page.wp_source(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         else:

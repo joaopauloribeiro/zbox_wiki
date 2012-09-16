@@ -313,10 +313,7 @@ _stat_tpl = """# Stat
 """
 
 def wp_stat(config_agent, tpl_render, req_path):
-    view_settings = get_view_settings(config_agent)
-    view_settings["show_quick_links"] = False
-    view_settings["show_toolbox"] = False
-
+    view_settings = get_view_settings(config_agent, simple = True)
     static_files = static_file.get_global_static_files(**view_settings)
 
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
@@ -326,9 +323,10 @@ def wp_stat(config_agent, tpl_render, req_path):
                                                                                req_path = req_path)
     title = "Stat"
 
-    page_count = commons.shutils.run(" cd %s ; find . -type f -name '*.md' -or -name '*.markdown' | wc -l " %
-                             folder_pages_full_path) or 0
-    folder_count = commons.shutils.run(" cd %s ; find . -type d | wc -l " % folder_pages_full_path) or 0
+    cmd = "find . -type f -name '*.md' -or -name '*.markdown' | wc -l "
+    page_count = commons.shutils.run(cmd, cwd = folder_pages_full_path) or 0
+    cmd = "find . -type d | wc -l "
+    folder_count = commons.shutils.run(cmd, cwd = folder_pages_full_path) or 0
     buf = _stat_tpl % (int(page_count), int(folder_count))
     content = mdutils.md2html(config_agent = config_agent,
                               req_path = req_path,
