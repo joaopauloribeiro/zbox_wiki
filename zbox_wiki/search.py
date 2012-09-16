@@ -70,7 +70,7 @@ def search_by_filename_and_file_content(keywords, limit):
         mixed = web.utils.uniq(matched_filename_lines + matched_content_lines)
     elif matched_content_lines and not matched_filename_lines:
         mixed = matched_content_lines
-    elif not matched_content_lines  and matched_filename_lines:
+    elif not matched_content_lines and matched_filename_lines:
         mixed = matched_filename_lines
     else:
         return None

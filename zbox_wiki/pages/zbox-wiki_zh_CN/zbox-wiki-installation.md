@@ -32,7 +32,7 @@ HomeBrew 默认安装软件到 /usr/local ，执行命令时不需要带 sudo/su
 
 创建一个 Zbox Wiki 实例:
 
-    zwadmin.py create /tmp/helloworld
+    zwadmin.py --create /tmp/helloworld
     zwd.py --path /tmp/helloworld --port 8080
 
 
@@ -86,7 +86,7 @@ Graphviz 特性依赖:
 
 创建一个 Zbox Wiki 实例:
 
-    zwadmin.py create /tmp/helloworld
+    zwadmin.py --create /tmp/helloworld
     zwd.py --path /tmp/helloworld --port 8080
 
 在浏览器中访问 [http://0.0.0.0:8080/](http://0.0.0.0:8080/) 测试。

@@ -1,5 +1,5 @@
-$def with (enable_show_full_path, enable_auto_toc, enable_highlight, static_files)
-<!-- DON NOT CHANGE IT UNLESS YOU KNOW WHAT YOU ARE DOING -->
+$def with (static_files, **view_settings)
+<!-- DO NOT CHANGE THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,30 +25,30 @@ $def with (enable_show_full_path, enable_auto_toc, enable_highlight, static_file
         <form method="POST" action="/~settings">
 
 
-            <label for="enable_show_full_path">show full path</label>
+            <label for="show_full_path">show full path</label>
 
-            $if enable_show_full_path:
-                <input type="checkbox" id="enable_show_full_path" name="enable_show_full_path" checked="checked" />
+            $if view_settings["show_full_path"]:
+                <input type="checkbox" id="show_full_path" name="show_full_path" checked="checked" />
             $else:
-                <input type="checkbox" id="enable_show_full_path" name="enable_show_full_path" />
+                <input type="checkbox" id="show_full_path" name="show_full_path" />
             <br />
 
 
-            <label for="enable_auto_toc">auto <b>T</b>able <b>O</b>f <b>C</b>ontent</label>
+            <label for="auto_toc">auto <b>T</b>able <b>O</b>f <b>C</b>ontent</label>
 
-            $if enable_auto_toc:
-                <input type="checkbox" id="enable_auto_toc" name="enable_auto_toc" checked="checked" />
+            $if view_settings["auto_toc"]:
+                <input type="checkbox" id="auto_toc" name="auto_toc" checked="checked" />
             $else:
-                <input type="checkbox" id="enable_auto_toc" name="enable_auto_toc" />
+                <input type="checkbox" id="auto_toc" name="auto_toc" />
             <br />
 
 
-            <label for="enable_highlight">highlight source code</label>
+            <label for="highlight_code">highlight source code</label>
 
-            $if enable_highlight:
-                <input type="checkbox" id="enable_highlight" name="enable_highlight" checked="checked" />
+            $if view_settings["highlight_code"]:
+                <input type="checkbox" id="highlight_code" name="highlight_code" checked="checked" />
             $else:
-                <input type="checkbox" id="enable_highlight" name="enable_highlight" />
+                <input type="checkbox" id="highlight_code" name="highlight_code" />
             <br />
 
 

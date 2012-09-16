@@ -28,7 +28,7 @@ Install Zbox Wiki:
 
 Create a Zbox Wiki instance:
 
-    zwadmin.py create /tmp/helloworld
+    zwadmin.py --create /tmp/helloworld
     zwd.py --path /tmp/helloworld --port 8080
 
 
@@ -85,7 +85,7 @@ Install ZBox wiki
 
 Create a Zbox Wiki instance:
 
-    zwadmin.py create /tmp/helloworld
+    zwadmin.py --create /tmp/helloworld
     zwd.py --path /tmp/helloworld --port 8080
 
 
