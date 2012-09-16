@@ -60,18 +60,19 @@ def parse_work_path(path, folder_pages_full_path):
     return path
 
 def cat_files(work_path, files):
-    buf = ""
+    all = ""
     for filename in files:
         full_path = os.path.join(work_path, filename)
-        chunk = "%s" % filename
-        chunk += "\n"
+        chunk = filename + "\n"
         with open(full_path) as f:
             buf = commons.strutils.safeunicode(f.read())
-            chunk += buf
+            buf = "\n    ".join(buf.split("\n"))
+            buf = commons.strutils.rstrips(buf, "    ")
+            chunk += "\n\n    " + buf
         chunk += "\n"
-        buf += chunk
+        all += chunk
 
-    return buf
+    return all
 
 
 def macro_zw2md_cat(text, folder_pages_full_path = None, **view_settings):
