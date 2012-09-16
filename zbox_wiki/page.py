@@ -140,19 +140,23 @@ def wp_read(config_agent, tpl_render, req_path):
             fixed_req_path = os.path.join(req_uri, "index")
             web.seeother(fixed_req_path)
             return
+        elif req_path == HOME_PAGE:
+            # /index does not exists
+            fixed_req_path = os.path.join(req_uri, "~all")
+            web.seeother(fixed_req_path)
+            return
         else:
             # try /path/to/folder/*
             buf = shell.get_page_file_list_by_req_path(folder_pages_full_path = folder_pages_full_path, req_path = req_path)
             if buf:
                 buf = mdutils.sequence_to_unorder_list(buf.split("\n"), **view_settings)
     else:
-        # /index does not exists
-        if req_path == HOME_PAGE:
-            web.seeother("~all")
-            return
+        if req_uri.endswith("/"):
+            fixed_req_path = req_uri + "index?action=edit"
         else:
-            web.seeother("%s?action=edit" % req_uri)
-            return
+            fixed_req_path = req_uri + "?action=edit"
+        web.seeother(fixed_req_path)
+        return
 
     title = mdutils.get_title_from_md(local_full_path = local_full_path)
     content = mdutils.md2html(config_agent = config_agent,
@@ -195,7 +199,7 @@ def wp_edit(config_agent, tpl_render, req_path):
         buf = commons.shutils.cat(local_full_path)
     elif os.path.isdir(local_full_path):
         dot_idx_full_path = os.path.join(local_full_path, "index.md")
-        buf = commons.shutils.cat(dot_idx_full_path)
+        buf = commons.shutils.cat(dot_idx_full_path) or ""
     elif not os.path.exists(local_full_path):
         create_new = True
         buf = ""

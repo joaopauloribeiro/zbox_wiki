@@ -24,9 +24,9 @@ def get_recent_changes_from_cache(config_agent):
         stat = os.stat(path)
 
         if (time.time() - stat.st_mtime) > config_agent.config.getint("cache", "cache_update_interval"):
-            update_recent_change_cache(config_agent)
+            update_recent_change_cache(folder_pages_full_path)
     else:
-        update_recent_change_cache(config_agent)
+        update_recent_change_cache(folder_pages_full_path)
 
     with open(path) as f:
         buf = f.read()
