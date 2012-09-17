@@ -86,19 +86,14 @@ class WikiPage(object):
 
         if action == "read":
             return page.wp_read(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
-
-        elif action == "edit":
-            return page.wp_edit(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
-
+        elif action == "update":
+            return page.wp_update(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "rename":
             return page.wp_rename(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
-
         elif action == "delete":
-            return page.wp_delete(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
-
+            return page.wp_de1lete(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "source":
             return page.wp_source(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
-
         else:
             raise web.BadRequest()
 
@@ -109,61 +104,24 @@ class WikiPage(object):
 
         inputs = web.input()
         action = inputs.get("action")
-        if (not action) or (action not in ("edit", "rename")):
+        if (not action) or (action not in ("update", "rename")):
             raise web.BadRequest()
 
-        content = inputs.get("content")
-        content = web.utils.safestr(content)
+        new_content = inputs.get("content")
+        new_content = web.utils.safestr(new_content)
 
-        folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
-        # NOTICE: if req_path == `users/`, full_path will be `/path/to/users/`,
-        #         its parent will be `/path/to/users`.
-        full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
-
-        parent = os.path.dirname(full_path)
-        if not os.path.exists(parent):
-            os.makedirs(parent)
-
-        if action == "edit":
-            page.update_page_by_req_path(req_path = req_path, content = content)
-
-            web.seeother("/%s" % req_path)
-            return
-        elif action == "rename":
-            new_path = inputs.get("new_path")
-            if not new_path:
+        if action == "update":
+            if (req_path in consts.g_special_paths) or (req_path in consts.g_redirect_paths) or req_path.endswith("/"):
                 raise web.BadRequest()
 
-            old_full_path = mdutils.req_path_to_local_full_path(req_path, folder_pages_full_path)
-            if os.path.isfile(old_full_path):
-                new_full_path = mdutils.req_path_to_local_full_path(new_path)
-            elif os.path.isdir(old_full_path):
-                folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
-                new_full_path = os.path.join(folder_pages_full_path, new_path)
-            else:
-                raise Exception("un-expected path '%s'" % req_path)
+            return page.wp_update_post(config_agent = config_agent, req_path = req_path, new_content = new_content)
 
-            if os.path.exists(new_full_path):
-                err_info = "WARNING: The page %s already exists" % new_full_path
-                return tpl_render.rename(req_path, err_info, static_files = static_file.g_global_static_files)
+        elif action == "rename":
+            new_path = inputs.get("new_path")
+            if (req_path in consts.g_special_paths) or (req_path in consts.g_redirect_paths) or (not new_path):
+                raise web.BadRequest()
 
-            parent = os.path.dirname(new_full_path)
-            if not os.path.exists(parent):
-                os.makedirs(parent)
-
-            shutil.move(old_full_path, new_full_path)
-
-            cache.update_all_pages_list_cache()
-            cache.update_recent_change_cache()
-
-            if os.path.isfile(new_full_path):
-                web.seeother("/%s" % new_path)
-                return
-            elif os.path.isdir(new_full_path):
-                web.seeother("/%s/" % new_path)
-                return
-            else:
-                raise Exception("un-expected path '%s'" % new_path)
+            return page.wp_rename_post(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path, new_path = new_path)
 
         url = os.path.join("/", req_path)
         web.redirect(url)
@@ -206,27 +164,7 @@ class SpecialWikiPage(object):
         inputs = web.input()
             
         if req_path == "~search":
-            view_settings = page.get_view_settings(config_agent)
-
-            keywords = inputs.get("k")
-            keywords = web.utils.safestr(keywords)
-            title = "Search %s" % keywords
-
-            if keywords:
-                limit = config_agent.config.getint("pagination", "search_page_limit")
-                lines = search.search_by_filename_and_file_content(keywords, limit = limit)
-                buf = mdutils.sequence_to_unorder_list(seq = lines, **view_settings)
-            else:
-                buf = None
-
-            if buf:
-                content = mdutils.md2html(config_agent = config_agent, req_path = req_path, text = buf, **view_settings)
-            else:
-                content = "matched not found"
-
-            static_files = static_file.get_global_static_files(**view_settings)
-
-            return tpl_render.search(static_files = static_files, title = title, keywords = keywords, content = content)
+            return page.wp_search(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
 
         elif req_path == "~settings":
             show_full_path = inputs.get("show_full_path")
@@ -260,22 +198,22 @@ class SpecialWikiPage(object):
             else:
                 latest_req_path = "/"
 
-            web.seeother(latest_req_path)
-            return
+            return web.seeother(latest_req_path)
 
         elif req_path == "~new":
-            real_req_path = inputs.get("path")
-            fixed_req_path = web.lstrips(real_req_path, "/")
+            buf_path = inputs.get("path")
+            buf_path = commons.strutils.lstrips(buf_path, "/")
+            buf_path = commons.strutils.rstrips(buf_path, ".md")
+            fixed_path = commons.strutils.rstrips(buf_path, ".markdown")
+            if (not fixed_path) or (fixed_path in consts.g_special_paths) or (fixed_path in consts.g_redirect_paths):
+                raise web.BadRequest()
 
             content = inputs.get("content")
             content = web.utils.safestr(content)
-        
-            page.update_page_by_req_path(req_path = fixed_req_path, content = content)
+            if not content:
+                raise web.BadRequest()
 
-            cache.update_recent_change_cache(config_agent)
-            cache.update_all_pages_list_cache(config_agent)
-
-            web.seeother(real_req_path)
+            page.wp_create(config_agent = config_agent, req_path = req_path, path = fixed_path, content = content)
             return
 
         else:

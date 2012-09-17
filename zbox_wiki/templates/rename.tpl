@@ -1,4 +1,4 @@
-$def with (config_agent, static_files, title, old_path, **view_settings)
+$def with (config_agent, static_files, title, old_path, err_info = "", **view_settings)
 <!-- DO NOT CHANGE THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
@@ -19,6 +19,9 @@ $def with (config_agent, static_files, title, old_path, **view_settings)
 <div id="container">
 
 <h2> Rename: $old_path </h2>
+
+$if err_info:
+    <div id="error_msg"> $err_info </div>
 
 <div id="rename">
     <form method="POST" accept-charset="utf-8">

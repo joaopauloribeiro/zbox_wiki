@@ -54,7 +54,7 @@ def create_page(req_path, content):
 
     params = urllib.urlencode({'content': content})
     conn = httplib.HTTPConnection(conf.zwiki_host)
-    conn.request("POST", "/%s?action=edit" % fixed_req_path, params)
+    conn.request("POST", "/%s?action=update" % fixed_req_path, params)
     response = conn.getresponse()
 
     if response.status == httplib.NOT_FOUND:

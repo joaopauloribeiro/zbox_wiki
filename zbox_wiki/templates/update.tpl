@@ -23,7 +23,7 @@ $def with (config_agent, static_files, req_path, title, content, create_new, **v
                 <input type="text" id="path" name="path" value="$req_path" />
             $else:
                 <p>Update path:</p>
-                <p>$req_path</p>
+                <p id="path">$req_path</p>
         </div>
 
         <div class="input-widget">

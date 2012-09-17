@@ -2,12 +2,11 @@
 #-*- coding:utf-8 -*-
 import os
 import re
-import sys
 import logging
 
 import consts
 import commons
-import page
+import shell
 import web
 
 
@@ -213,28 +212,32 @@ def text_path_to_button_path(path):
     return button_path
 
 
-def md2html(config_agent, req_path, text, **view_settings):
+def md2html(config_agent, req_path, text, static_file_prefix, **view_settings):
     folder_pages_full_path = config_agent.get_full_path("paths", "pages_path")
-    req_full_path = req_path_to_local_full_path(req_path = req_path, folder_pages_full_path = folder_pages_full_path)
-    static_file_prefix = os.path.dirname(req_full_path)
+    local_full_path = req_path_to_local_full_path(req_path = req_path, folder_pages_full_path = folder_pages_full_path)
+    save_to_prefix = os.path.dirname(local_full_path)
 
     buf = text
     
     if tex2png:
         try:
-            buf = macro_tex2md(buf, save_to_prefix = static_file_prefix, **view_settings)
-        except Exception:
+            buf = macro_tex2md(buf, save_to_prefix = save_to_prefix, **view_settings)
+        except Exception, ex:
+            logging.error(str(ex))
+
             msg = "it seems that latex or dvipng doesn't works well on your box, or source code is invalid"
-            sys.stderr.write("\n" + msg + "\n")
+            logging.error(msg)
 
             buf = text
 
     if graphviz2png:
         try:
-            buf = macro_graphviz2md(buf, save_to_prefix = static_file_prefix, **view_settings)
-        except Exception:
+            buf = macro_graphviz2md(buf, save_to_prefix = save_to_prefix, **view_settings)
+        except Exception, ex:
+            logging.error(str(ex))
+
             msg = "it seems that graphviz doesn't works well on your box, or source code is invalid"
-            sys.stderr.write("\n" + msg + "\n")
+            logging.error(msg)
 
             buf = text
 
@@ -293,7 +296,7 @@ def req_path_to_local_full_path(req_path, folder_pages_full_path):
     '/tmp/pages/'
 
     >>> req_path_to_local_full_path("", folder_pages_full_path)
-    '/tmp/pages/index.md'
+    '/tmp/pages/'
     """
     req_path = web.rstrips(req_path, ".md")
     req_path = web.rstrips(req_path, ".markdown")
@@ -304,7 +307,7 @@ def req_path_to_local_full_path(req_path, folder_pages_full_path):
     elif not req_path.endswith("/"):
         HOME_PAGE = ""
         if req_path == HOME_PAGE:
-            req_path = "index"
+            return folder_pages_full_path
 
         path_md = "%s.md" % os.path.join(folder_pages_full_path, req_path)
         path_markdown = "%s.markdown" % os.path.join(folder_pages_full_path, req_path)
@@ -323,8 +326,8 @@ def req_path_to_local_full_path(req_path, folder_pages_full_path):
         return os.path.join(folder_pages_full_path, req_path)
 
 
-def get_title_from_md(full_path):
-    buf = commons.shutils.cat(full_path)
+def get_title_from_md(local_full_path):
+    buf = commons.shutils.cat(local_full_path)
     if buf:
         buf = commons.strip_bom(buf)
 
@@ -340,7 +343,7 @@ def get_title_from_md(full_path):
 
 def sequence_to_unorder_list(seq, **view_settings):
     """
-        >>> sequence_to_unorder_list(['a','b','c'], 1)
+        >>> sequence_to_unorder_list(['a','b','c'], show_full_path = 1)
         u'- [a](/a)\\n- [b](/b)\\n- [c](/c)'
     """
     lis = []
@@ -382,7 +385,7 @@ def macro_zw2md_ls(text, folder_pages_full_path, **view_settings):
             max_depth = int(m.group("maxdepth"))
 
             if os.path.exists(full_path):
-                buf = page.get_page_file_list_by_req_path(req_path = req_path,
+                buf = shell.get_page_file_list_by_req_path(req_path = req_path,
                                                           max_depth = max_depth,
                                                           folder_pages_full_path = folder_pages_full_path)
                 buf = sequence_to_unorder_list(buf.split("\n"), **view_settings)

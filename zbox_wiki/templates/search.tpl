@@ -1,4 +1,4 @@
-$def with (static_files, title, keywords, content)
+$def with (config_agent, static_files, title, keywords, content)
 <!-- DO NOT CHANGE THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING -->
 <!DOCTYPE html>
 <html>
