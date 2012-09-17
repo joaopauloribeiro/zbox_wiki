@@ -2,20 +2,15 @@
 #-*- coding:utf-8 -*-
 import cgi
 import os
-import shutil
 
 # ship web.py with this project for walking around custom static files folder bug
 import web
 
 import acl
-import cache
 import consts
 import commons
 import page
 import config_agent
-import search
-import static_file
-import mdutils
 
 
 # declare for using in scripts/fcgi_main.py
@@ -28,7 +23,6 @@ __all__ = [
     "WikiPage",
 ]
 
-web.config.debug = True
 
 mapping = (
     "/robots.txt", "Robots",

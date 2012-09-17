@@ -1,5 +1,5 @@
 import os
-import consts
+
 
 def append_static_file(text, file_path, file_type, add_newline=False):
     assert file_type in ("css", "js")

@@ -5,7 +5,6 @@ import shutil
 import web
 
 import cache
-import consts
 import commons
 import mdutils
 import paginator

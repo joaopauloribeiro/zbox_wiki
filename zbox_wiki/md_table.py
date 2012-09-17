@@ -26,7 +26,7 @@ will be:
 
 import markdown
 import re
-import web.utils
+import commons
 
 __all__ = [
     "md_table2html"
@@ -62,8 +62,8 @@ def _parse_cells(line):
     if m_obj:
         cells = m_obj.group('cells')
 
-        cells = web.utils.strips(markdown.markdown(cells), "<p>")
-        cells = web.utils.strips(cells, "</p>")        
+        cells = commons.strutils.strips(markdown.markdown(cells), "<p>")
+        cells = commons.strutils.strips(cells, "</p>")
         
         splitter = m_obj.group('splitter')
         cells = [cell.strip()
