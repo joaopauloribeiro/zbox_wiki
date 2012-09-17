@@ -230,6 +230,19 @@ ls("zbox-wiki_zh_CN/", maxdepth=3)
 }}}
 
 
+
+## cat 宏
+
+现实匹配文件的内容
+
+代码：
+
+```{{{#!zw
+cat("*.c")
+}}}
+```
+
+
 ## 参考链接
 
  - http://daringfireball.net/projects/markdown/syntax

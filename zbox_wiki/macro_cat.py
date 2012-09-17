@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+import logging
 import os
 import re
 import commons
+
+logging.getLogger("macro_cat").setLevel(logging.DEBUG)
 
 
 def match_in_re(name, patterns):
@@ -35,7 +38,8 @@ def fix_pattern(p):
             fixed = "^(.+?)\.%s$" % suffix
             return fixed
         else:
-            print "expected regular expression or '*.suffix' style expression, got `%s`" % p
+            msg = "expected regular expression or '*.suffix' style expression, got `%s`" % p
+            logging.error(msg)
             return None
 
     return p
@@ -97,12 +101,7 @@ def macro_zw2md_cat(text, folder_pages_full_path = None, **view_settings):
             match_pattern = commons.strutils.strips(match_pattern, "/")
             match_pattern = fix_pattern(match_pattern)
 
-            print "work_path = ", work_path
-            print "match_pattern = ", match_pattern
-
             files = get_files_list(path = work_path, match_patterns = [match_pattern])
-
-            print "files = ", files
 
             buf = cat_files(work_path = work_path, files = files)
             return buf

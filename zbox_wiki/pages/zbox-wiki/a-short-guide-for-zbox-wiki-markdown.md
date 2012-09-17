@@ -244,6 +244,20 @@ ls("zbox-wiki/", maxdepth=3)
 }}}
 
 
+## Macro cat
+
+show file content of specify file(s)
+
+Source:
+
+```{{{#!zw
+cat("*.c")
+}}}
+```
+
+
+
+
 ## References
 
  - http://daringfireball.net/projects/markdown/syntax
