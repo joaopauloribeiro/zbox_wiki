@@ -94,13 +94,14 @@ def macro_zw2md_cat(text, folder_pages_full_path, req_path, **view_settings):
         code = code.split("\n")[1]
 
         if code.startswith("cat("):
-            p = 'cat\("(?P<file_name>.+?)"\)'
+            p = 'cat\((?P<file_name>.+?)\)'
             m = re.match(p, code, re.UNICODE | re.MULTILINE)
             file_name = m.group("file_name")
-            file_name = commons.strutils.strips(file_name, "\n")
-            work_path = parse_work_path(file_name, folder_pages_full_path, req_path)
+            file_name = file_name.strip()
+            work_path = parse_work_path(file_name = file_name, folder_pages_full_path = folder_pages_full_path, req_path = req_path)
 
-            match_pattern = commons.strutils.lstrips(file_name, work_path)
+            match_pattern = file_name.strip("'").strip("\"")
+            match_pattern = commons.strutils.lstrips(match_pattern, work_path)
             match_pattern = commons.strutils.strips(match_pattern, "/")
             match_pattern = fix_pattern(match_pattern)
 
