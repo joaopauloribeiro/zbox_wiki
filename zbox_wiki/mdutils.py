@@ -244,7 +244,7 @@ def md2html(config_agent, req_path, text, static_file_prefix, **view_settings):
     if static_file_prefix:
         buf = convert_static_file_url(buf, static_file_prefix)
 
-    buf = zw_macro2md(buf, folder_pages_full_path = folder_pages_full_path, **view_settings)
+    buf = zw_macro2md(buf, folder_pages_full_path = folder_pages_full_path, req_path = req_path, **view_settings)
 
     buf = md_table.md_table2html(buf)
     buf = code_block_to_md_code(buf)
@@ -399,10 +399,10 @@ def macro_zw2md_ls(text, folder_pages_full_path, **view_settings):
 
     return p_obj.sub(code_repl, text)
 
-def zw_macro2md(text, folder_pages_full_path, **view_settings):
+def zw_macro2md(text, folder_pages_full_path, req_path, **view_settings):
     buf = text
-    buf = macro_cat.macro_zw2md_cat(text = buf, folder_pages_full_path = folder_pages_full_path, **view_settings)
-    buf = macro_zw2md_ls(text = buf, folder_pages_full_path = folder_pages_full_path, **view_settings)
+    buf = macro_cat.macro_zw2md_cat(text = buf, folder_pages_full_path = folder_pages_full_path, req_path = req_path, **view_settings)
+    buf = macro_zw2md_ls(text = buf, folder_pages_full_path = folder_pages_full_path, req_path = req_path, **view_settings)
     return buf
 
 

@@ -44,24 +44,28 @@ def fix_pattern(p):
 
     return p
 
-def parse_work_path(path, folder_pages_full_path):
-    if os.path.exists(path):
-        return path
-    elif path.startswith("/"):
-        par = os.path.dirname(path)
+
+def parse_work_path(file_name, folder_pages_full_path, req_path):
+    if os.path.exists(file_name):
+        return file_name
+
+    elif file_name.find("/") != -1:
+        par = os.path.dirname(file_name)
         if os.path.exists(par):
             return par
 
-    if folder_pages_full_path is not None:
-        full_path = os.path.join(folder_pages_full_path, path)
-        if os.path.exists(full_path):
-            return full_path
+        file_full_path = os.path.join(folder_pages_full_path, par)
+        if os.path.exists(file_full_path):
+            return file_full_path
 
-        par = os.path.dirname(full_path)
+    default_work_path = os.path.join(folder_pages_full_path, req_path)
+    if req_path:
+        par = os.path.dirname(default_work_path)
         if os.path.exists(par):
             return par
 
-    return path
+    return default_work_path
+
 
 def cat_files(work_path, files):
     all = ""
@@ -79,7 +83,7 @@ def cat_files(work_path, files):
     return all
 
 
-def macro_zw2md_cat(text, folder_pages_full_path = None, **view_settings):
+def macro_zw2md_cat(text, folder_pages_full_path, req_path, **view_settings):
     shebang_p = "#!zw"
     code_p = '(?P<code>[^\f\v]+?)'
     code_block_p = "^\{\{\{[\s]*%s*%s[\s]*\}\}\}" % (shebang_p, code_p)
@@ -90,14 +94,13 @@ def macro_zw2md_cat(text, folder_pages_full_path = None, **view_settings):
         code = code.split("\n")[1]
 
         if code.startswith("cat("):
-            p = 'cat\("(?P<path>.+?)"\)'
+            p = 'cat\("(?P<file_name>.+?)"\)'
             m = re.match(p, code, re.UNICODE | re.MULTILINE)
-            path = m.group("path")
-            path = commons.strutils.strips(path, "\n")
+            file_name = m.group("file_name")
+            file_name = commons.strutils.strips(file_name, "\n")
+            work_path = parse_work_path(file_name, folder_pages_full_path, req_path)
 
-            work_path = parse_work_path(path, folder_pages_full_path)
-
-            match_pattern = commons.strutils.lstrips(path, work_path)
+            match_pattern = commons.strutils.lstrips(file_name, work_path)
             match_pattern = commons.strutils.strips(match_pattern, "/")
             match_pattern = fix_pattern(match_pattern)
 
@@ -125,11 +128,12 @@ def test_fix_pattern():
 def test_macro_cat():
     text = """
 {{{#!zw
-cat("/Users/lee/lees_wiki/pages/*.md")
+cat("*.md")
 }}}
 """
-
-    result = macro_zw2md_cat(text)
+    req_path = ""
+    folder_pages_full_path = "/tmp/lees_wiki/pages/"
+    result = macro_zw2md_cat(text = text, folder_pages_full_path = folder_pages_full_path, req_path = req_path)
     result = commons.strutils.strips(result, "\n")
     print repr(result)
 
