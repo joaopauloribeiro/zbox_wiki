@@ -251,7 +251,6 @@ def fix_pages_path_symlink(proj_root_full_path):
         os.symlink(src_full_path, dst_full_path)
 
 def main(instance_root_full_path):
-    web.config.debug = config_agent.config.getboolean("main", "debug")
     web.config.static_path = config_agent.get_full_path("paths", "static_path")
 
     fix_pages_path_symlink(instance_root_full_path)

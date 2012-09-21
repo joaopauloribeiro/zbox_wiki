@@ -1,7 +1,11 @@
+import logging
 import os
 import web
 
 import config_agent
+
+
+logging.getLogger("search").setLevel(logging.DEBUG)
 
 
 def search_by_filename_and_file_content(keywords, limit):
@@ -42,13 +46,11 @@ def search_by_filename_and_file_content(keywords, limit):
                               " awk -F ':' '{print $1}' | uniq | head -n %d " % \
                               (folder_page_full_path, find_by_content_matched, limit)
 
-    if web.config.debug:
-        msg = "find by filename >>> " + find_by_filename_cmd
-        print msg
+    msg = "find files by name >>>" + find_by_filename_cmd
+    logging.debug(msg)
 
-    if web.config.debug:
-        msg = "find by content >>> " + find_by_content_cmd
-        print msg
+    msg = "find files by content >>>" + find_by_content_cmd
+    logging.debug(msg)
 
 
     matched_content_lines = os.popen(find_by_content_cmd).read().strip()
