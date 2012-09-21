@@ -51,7 +51,7 @@ def fix_403_msg():
     maintainer_email = config_agent.config.get("main", "maintainer_email")
 
     if maintainer_email:
-        ro_tpl_p1 = """Page you request doesn't exists, and this wiki is READONLY. <br />
+        ro_tpl_p1 = """Page you request doesn't exists, and this site is READONLY. <br />
 You could fork it and commit the changes, then send a pull request to the maintainer: <br />
 
 <pre><code>%s</code></pre>"""
