@@ -130,11 +130,15 @@ def wp_read(config_agent, tpl_render, req_path):
                 buf = "folder `%s` exists, but there is no files" % path_info
     else:
         # not os.path.exists(local_full_path)
-        if path_info.endswith("/"):
-            fixed_req_path = path_info + "index?action=update"
+        readonly = config_agent.config.get("main", "readonly")
+        if readonly:
+            raise web.Forbidden()
         else:
-            fixed_req_path = path_info + "?action=update"
-        return web.seeother(fixed_req_path)
+            if path_info.endswith("/"):
+                fixed_req_path = path_info + "index?action=update"
+            else:
+                fixed_req_path = path_info + "?action=update"
+            return web.seeother(fixed_req_path)
 
     title = mdutils.get_title_from_md(local_full_path = local_full_path)
     content = mdutils.md2html(config_agent = config_agent,
