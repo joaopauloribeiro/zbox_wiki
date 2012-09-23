@@ -326,7 +326,18 @@ def req_path_to_local_full_path(req_path, folder_pages_full_path):
         return os.path.join(folder_pages_full_path, req_path)
 
 
-def get_title_from_md(local_full_path):
+def get_title_by_file_path_in_md(folder_pages_full_path, file_path_suffix):
+    prefix = os.path.join(folder_pages_full_path, file_path_suffix)
+    a = prefix + ".md"
+    b = prefix + ".markdown"
+
+    if os.path.exists(a):
+        local_full_path = a
+    elif os.path.exists(b):
+        local_full_path =  b
+    else:
+        return None
+
     buf = commons.shutils.cat(local_full_path)
     if buf:
         buf = commons.strip_bom(buf)
@@ -341,9 +352,9 @@ def get_title_from_md(local_full_path):
         title = None
     return title
 
-def sequence_to_unorder_list(seq, **view_settings):
+def sequence_to_unorder_list(folder_pages_full_path, seq, **view_settings):
     """
-        >>> sequence_to_unorder_list(['a','b','c'], show_full_path = 1)
+        >>> sequence_to_unorder_list("", ['a','b','c'], show_full_path = 1)
         u'- [a](/a)\\n- [b](/b)\\n- [c](/c)'
     """
     lis = []
@@ -354,7 +365,8 @@ def sequence_to_unorder_list(seq, **view_settings):
 
         name, url = stripped_name, "/" + stripped_name
         if not view_settings["show_full_path"]:
-            buf = get_title_from_md(name)
+            file_path_suffix = name
+            buf = get_title_by_file_path_in_md(folder_pages_full_path, file_path_suffix)
             if buf is None:
                 name = name.split('/')[-1].replace('-', ' ').title()
             else:
@@ -385,10 +397,12 @@ def macro_zw2md_ls(text, folder_pages_full_path, **view_settings):
             max_depth = int(m.group("maxdepth"))
 
             if os.path.exists(full_path):
-                buf = shell.get_page_file_list_by_req_path(req_path = req_path,
-                                                          max_depth = max_depth,
-                                                          folder_pages_full_path = folder_pages_full_path)
-                buf = sequence_to_unorder_list(buf.split("\n"), **view_settings)
+                buf = shell.get_page_file_list_by_req_path(folder_pages_full_path = folder_pages_full_path,
+                                                           req_path = req_path,
+                                                           max_depth = max_depth)
+                buf = sequence_to_unorder_list(folder_pages_full_path = folder_pages_full_path,
+                                               seq = buf.split("\n"),
+                                               **view_settings)
             else:
                 buf = ""
             return buf
