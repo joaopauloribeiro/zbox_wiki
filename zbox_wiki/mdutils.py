@@ -331,7 +331,9 @@ def get_title_by_file_path_in_md(folder_pages_full_path, file_path_suffix):
     a = prefix + ".md"
     b = prefix + ".markdown"
 
-    if os.path.exists(a):
+    if os.path.exists(prefix):
+        local_full_path = prefix
+    elif os.path.exists(a):
         local_full_path = a
     elif os.path.exists(b):
         local_full_path =  b

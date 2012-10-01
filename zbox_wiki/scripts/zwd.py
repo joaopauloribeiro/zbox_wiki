@@ -52,8 +52,8 @@ def run_instance(args):
 
     from zbox_wiki import config_agent
     instance_config_file_full_path = os.path.join(instance_root_full_path, "default.cfg")
-    instance_config = config_agent.load_config(paths = [instance_config_file_full_path])
-    instance_config.set("paths", "instance_full_path", instance_root_full_path)
+    instance_config = config_agent.load_config(paths = [instance_config_file_full_path],
+                                               instance_full_path = instance_root_full_path)
     config_agent.config = instance_config
 
     pages_path = config_agent.get_full_path("paths", "pages_path")
