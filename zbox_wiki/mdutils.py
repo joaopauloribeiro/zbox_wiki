@@ -255,49 +255,7 @@ def md2html(config_agent, req_path, text, static_file_prefix, **view_settings):
     return buf
 
 
-def test_path2hierarchy():
-    for i in [
-        ("/", [("index", "/~index")]), # name, link pairs
-
-        ("/system-management/gentoo/abc",
-         [("system-management", "/system-management"),("gentoo", "/system-management/gentoo"),("abc", "/system-management/gentoo/abc"),]),
-
-        ("/programming-language",
-         [("programming-language", "/programming-language"),]),
-
-        ("/programming-language/",
-         [("programming-language", "/programming-language"),]),
-                                       ]:
-        req_path = i[0]
-        links = i[1]
-        assert path2hierarchy(req_path) == links
-
-
-
 def req_path_to_local_full_path(req_path, folder_pages_full_path):
-    """
-    >>> folder_pages_full_path = "/tmp/pages/"
-    >>> req_path_to_local_full_path("sandbox1", folder_pages_full_path)
-    '/tmp/pages/sandbox1.md'
-
-    >>> req_path_to_local_full_path("sandbox1/", folder_pages_full_path)
-    '/tmp/pages/sandbox1/'
-
-    >>> req_path_to_local_full_path("hacking/fetion/fetion-protocol/", folder_pages_full_path)
-    '/tmp/pages/hacking/fetion/fetion-protocol/'
-
-    >>> req_path_to_local_full_path("hacking/fetion/fetion-protocol/method-option.md", folder_pages_full_path)
-    '/tmp/pages/hacking/fetion/fetion-protocol/method-option.md'
-
-    >>> req_path_to_local_full_path("~all", folder_pages_full_path)
-    '/tmp/pages/'
-
-    >>> req_path_to_local_full_path("/", folder_pages_full_path)
-    '/tmp/pages/'
-
-    >>> req_path_to_local_full_path("", folder_pages_full_path)
-    '/tmp/pages/'
-    """
     req_path = web.rstrips(req_path, ".md")
     req_path = web.rstrips(req_path, ".markdown")
 
