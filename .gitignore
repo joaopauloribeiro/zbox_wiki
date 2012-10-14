@@ -8,7 +8,6 @@ dist/
 .ropeproject/
 ignore/
 *.egg-info/
-experimental/
 zbox_wiki/static/pages
 zbox_wiki/sessions/*
 zbox_wiki/pages/zbox-wiki/*.png

@@ -13,6 +13,9 @@ import page
 import config_agent
 
 
+web.config.debug = True
+
+
 # declare for using in scripts/fcgi_main.py
 __all__ = [
     "main",

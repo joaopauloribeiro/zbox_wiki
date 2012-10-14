@@ -9,6 +9,5 @@ if parent_path not in sys.path:
 
 import zbox_wiki
 
-
 web_url = 'http://0.0.0.0:8000/'
-instance_url = "/tmp/hello"
+instance_full_path = os.path.join(parent_path, "zbox_wiki")
