@@ -366,16 +366,26 @@ def wp_new(config_agent, req_path, tpl_render):
 
 
 def get_view_settings(config_agent, simple = False):
+    """ Deprecated """
     theme_name = config_agent.config.get("frontend", "theme_name")
 
     c_fp = config_agent.config.get("frontend", "show_full_path")
-    show_full_path = int(web.cookies().get("zw_show_full_path", c_fp))
+    try:
+        show_full_path = int(web.cookies().get("zw_show_full_path", c_fp))
+    except AttributeError:
+        show_full_path = c_fp
 
     c_toc = config_agent.config.getboolean("frontend", "auto_toc")
-    auto_toc = int(web.cookies().get("zw_auto_toc", c_toc))
+    try:
+        auto_toc = int(web.cookies().get("zw_auto_toc", c_toc))
+    except AttributeError:
+        auto_toc = c_toc
 
     c_hc = config_agent.config.get("frontend", "highlight_code")
-    highlight_code = int(web.cookies().get("zw_highlight", c_hc))
+    try:
+        highlight_code = int(web.cookies().get("zw_highlight", c_hc))
+    except AttributeError:
+        highlight_code = c_hc
 
     reader_mode = config_agent.config.getboolean("frontend", "reader_mode")
 

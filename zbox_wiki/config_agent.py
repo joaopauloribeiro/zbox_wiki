@@ -56,9 +56,13 @@ def get_full_path(section, name):
     rel2full_path = os.path.join(instance_full_path, rel_path)
 
     if os.path.exists(rel_path):
+        path_fixed = rel_path
+    elif os.path.exists(os.path.realpath(rel_path)):
         path_fixed = os.path.realpath(rel_path)
     elif os.path.exists(rel2full_path):
         path_fixed = rel2full_path
+    elif (not os.path.exists(rel_path)):
+        raise IOError("'%s' doesn't exists" % rel_path)
     else:
         raise IOError("composing full path of '%s' failed" % rel_path)
 
@@ -66,7 +70,8 @@ def get_full_path(section, name):
 
 
 if __name__ == "__main__":
-    paths = ["/Users/lee/lees_wiki/default.cfg"]
+    path = os.path.join(os.getenv("HOME"), "lees_wiki", "default.cfg")
+    paths = [path]
     my_config = load_config(paths)
     t =  my_config.getint("main", "version")
     print type(t), repr(t)
