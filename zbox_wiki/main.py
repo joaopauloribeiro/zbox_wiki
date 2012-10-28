@@ -7,6 +7,7 @@ import os
 import web
 
 import acl
+import atom_output
 import consts
 import commons
 import page
@@ -138,20 +139,32 @@ class SpecialWikiPage(object):
         limit = int(inputs.get("limit", page_limit))
 
         if req_path == "~recent":
-            return page.wp_get_recent_changes_from_cache(config_agent = config_agent, tpl_render = tpl_render,
-                                                         req_path = req_path, limit = limit, offset = offset)
+            return page.wp_get_recent_changes_from_cache(config_agent = config_agent,
+                                                         tpl_render = tpl_render,
+                                                         req_path = req_path,
+                                                         limit = limit,
+                                                         offset = offset)
         elif req_path == "~all":
-            return page.wp_get_all_pages(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path,
+            return page.wp_get_all_pages(config_agent = config_agent,
+                                         tpl_render = tpl_render,
+                                         req_path = req_path,
                                          limit = limit, offset = offset)
         elif req_path == "~settings":
-            return page.wp_view_settings(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
-
+            return page.wp_view_settings(config_agent = config_agent,
+                                         tpl_render = tpl_render,
+                                         req_path = req_path)
         elif req_path == "~stat":
-            return page.wp_stat(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
-
+            return page.wp_stat(config_agent = config_agent,
+                                tpl_render = tpl_render,
+                                req_path = req_path)
         elif req_path == "~new":
-            return page.wp_new(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
-
+            return page.wp_new(config_agent = config_agent,
+                               tpl_render = tpl_render,
+                               req_path = req_path)
+        elif req_path == "~atom":
+            buf = atom_output.generate_feed(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
+            web.header("Content-Type", "text/xml; charset=utf-8")
+            return buf
         else:
             return web.BadRequest()
 
