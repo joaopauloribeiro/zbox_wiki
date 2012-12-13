@@ -7,7 +7,7 @@ import web
 
 def _check_ip(req_obj, req_path):
     # allow_ips = ("192.168.0.10", )
-    allow_ips = None
+    allow_ips = commons.netutils.INVALID_REMOTE_IP_ADDRESSES
     remote_ip = web.ctx.get("ip")
     if not remote_ip:
         return False

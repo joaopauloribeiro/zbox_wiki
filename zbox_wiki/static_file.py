@@ -84,30 +84,25 @@ def get_folder_static_full_path(config_agent):
 
 def get_static_file_prefix_by_local_full_path(config_agent, local_full_path, req_path):
     folder_static_name = config_agent.config.get("paths", "static_path")
+    components = []
 
     if os.path.isfile(folder_static_name):
-        prefix = os.path.basename(folder_static_name)
+        chunk = os.path.basename(folder_static_name)
+        components.append(chunk)
     elif isinstance(folder_static_name, basestring):
-        prefix = folder_static_name
-    else:
-        msg = "expected folder_static_name is basestring in relation or absolution dir, got %s" % type(
-            folder_static_name)
-        logging.error(msg)
-        raise Exception(msg)
+        chunk = folder_static_name
+        components.append(chunk)
 
     folder_pages_name = config_agent.config.get("paths", "pages_path")
+    chunk = os.path.basename(folder_pages_name)
+    components.append(chunk)
 
     if os.path.isdir(local_full_path):
-        suffix = req_path
+        components.append(req_path)
     elif os.path.isfile(local_full_path):
-        suffix = os.path.dirname(req_path)
-    else:
-        msg = "expected local_full_path is basestring, got %s" % type(local_full_path)
-        logging.error(msg)
-        raise Exception(msg)
+        chunk = os.path.dirname(req_path)
+        components.append(chunk)
 
-
-    mid = os.path.basename(folder_pages_name)
-    prefix = "/%s/%s/%s" % (prefix, mid, suffix)
+    prefix = '/' + '/'.join(components)
 
     return prefix
