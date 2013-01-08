@@ -8,7 +8,7 @@ kwargs = dict(
     description = short_desc,
     long_description = "ZBox Wiki is %s, it's easy to use, easy to read and easy to extend." % short_desc,
 
-    version = "201206-r3",
+    version = "201212",
 
     author = "Shuge Lee",
     author_email = "shuge.lee@gmail.com",
@@ -53,6 +53,7 @@ kwargs = dict(
 
     package_data = {
       "zbox_wiki" : [
+          "nginx-debian.conf",
           "default.cfg",
           "pages/Kubuntu-logo.png",
           "pages/robots.txt",
@@ -61,6 +62,7 @@ kwargs = dict(
           "pages/zbox-wiki_zh_CN/*.md",
           "scripts/*.py",
           "scripts/*.sh",
+          "static/favicon.ico",
           "static/default/css/*.css",
           "static/default/js/*.js",
           "static/default/js/prettify/*.js",
