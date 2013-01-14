@@ -8,7 +8,7 @@ kwargs = dict(
     description = short_desc,
     long_description = "ZBox Wiki is %s, it's easy to use, easy to read and easy to extend." % short_desc,
 
-    version = "201212",
+    version = "201212-r1",
 
     author = "Shuge Lee",
     author_email = "shuge.lee@gmail.com",
