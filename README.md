@@ -17,9 +17,3 @@ You could use it as
  - Wiki system
 
 
-## Online Demo & Documentation
-
-[http://zbox_wiki.acodemonkey.com/](http://zbox_wiki.acodemonkey.com/)
-
-
-
