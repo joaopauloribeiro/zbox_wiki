@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 import ConfigParser
+import logging
 import os
 import platform
 import shutil
 
 from commons import argparse
 import zbox_wiki
+
+
+log = logging.getLogger(__name__)
 
 
 ZW_MOD_FULL_PATH = zbox_wiki.__path__[0]
@@ -16,7 +20,8 @@ if IS_DEB_BASED not in ("ubuntu", "debian"):
 
 
 zwd_help_msg_for_deb_based = """
-start ZBox Wiki:
+Start ZBox Wiki:
+
     zwd.py --port 8000 --path %s
 
 If you want to run it as daemon/FCGI:
@@ -25,8 +30,8 @@ If you want to run it as daemon/FCGI:
 
     cd %s
 
-    sudo cp nginx-debian.conf /etc/nginx/sites-available/zboxwiki
-    sudo ln -sf /etc/nginx/sites-available/zboxwiki /etc/nginx/sites-enabled/zboxwiki
+    sudo cp nginx-debian.conf /etc/nginx/sites-available/zbox_wiki.acodemonkey.com.conf
+    sudo ln -sf /etc/nginx/sites-available/zbox_wiki.acodemonkey.com.conf /etc/nginx/sites-enabled/zbox_wiki.acodemonkey.com.conf
     sudo /etc/init.d/nginx restart
 
     sh start_fcgi.sh
@@ -98,8 +103,7 @@ def cp_fcgi_scripts(instance_full_path):
 
     if IS_DEB_BASED:
         conf_file_name = "nginx-debian.conf"
-
-        nginx_conf_tpl = os.path.join(instance_full_path, "pages", "zbox-wiki", conf_file_name)
+        nginx_conf_tpl = os.path.join(ZW_MOD_FULL_PATH, conf_file_name)
         with open(nginx_conf_tpl) as f:
             buf = f.read()
         buf = buf.replace("/path/to/zw_instance", instance_full_path)
@@ -141,15 +145,31 @@ def fix_folder_pages_sym_link(instance_full_path):
         os.symlink(src, dst)
 
 def action_create(instance_full_path):
+    default_index_md = "index.md"
+    default_index_md_full_path = os.path.join(instance_full_path, "pages", default_index_md)
+    folder_pages_full_path = os.path.join(instance_full_path, "pages")
+
     for folder_name in ("static", "templates", "pages"):
         src = os.path.join(ZW_MOD_FULL_PATH, folder_name)
         dst = os.path.join(instance_full_path, folder_name)
 
+        if not os.path.exists(src):
+            msg = "source folder %s doesn't exists, skip copy, you should to create destination %s by manual" % (src, dst)
+            log.warn(msg)
+            continue
+
         if os.path.exists(dst):
             msg = "%s already exists, skip" % dst
-            print msg
+            log.warn(msg)
             continue
         shutil.copytree(src, dst)
+
+    if not os.path.exists(folder_pages_full_path):
+        os.makedirs(folder_pages_full_path, 0774)
+   
+    if not os.path.exists(default_index_md_full_path):    
+        with open(default_index_md_full_path, 'w') as f:
+            f.write("default index page in markdown")
 
     fix_folder_pages_sym_link(instance_full_path)
 

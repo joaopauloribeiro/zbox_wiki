@@ -9,13 +9,15 @@ def _check_ip(req_obj, req_path):
     # allow_ips = ("192.168.0.10", )
     allow_ips = commons.netutils.INVALID_REMOTE_IP_ADDRESSES
     remote_ip = web.ctx.get("ip")
-    if not remote_ip:
-        return False
-
-    if not commons.ip_in_network_ranges(remote_ip, allow_ips):
-        return False
-
     return True
+    # uncomment following to disallow access from WAN
+#    if not remote_ip:
+#        return False
+#
+#    if not commons.ip_in_network_ranges(remote_ip, allow_ips):
+#        return False
+#
+#    return True
 
 def check_ip(f):
     @functools.wraps(f)
