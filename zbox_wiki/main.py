@@ -7,10 +7,14 @@ import os
 import web
 
 import acl
+import atom_output
 import consts
 import commons
 import page
 import config_agent
+
+
+web.config.debug = True
 
 
 # declare for using in scripts/fcgi_main.py
@@ -51,7 +55,7 @@ def fix_403_msg():
     maintainer_email = config_agent.config.get("main", "maintainer_email")
 
     if maintainer_email:
-        ro_tpl_p1 = """Page you request doesn't exists, and this wiki is READONLY. <br />
+        ro_tpl_p1 = """Page you request doesn't exists, and this site is READONLY. <br />
 You could fork it and commit the changes, then send a pull request to the maintainer: <br />
 
 <pre><code>%s</code></pre>"""
@@ -85,7 +89,7 @@ class WikiPage(object):
         elif action == "rename":
             return page.wp_rename(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "delete":
-            return page.wp_de1lete(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
+            return page.wp_delete(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         elif action == "source":
             return page.wp_source(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
         else:
@@ -135,20 +139,32 @@ class SpecialWikiPage(object):
         limit = int(inputs.get("limit", page_limit))
 
         if req_path == "~recent":
-            return page.wp_get_recent_changes_from_cache(config_agent = config_agent, tpl_render = tpl_render,
-                                                         req_path = req_path, limit = limit, offset = offset)
+            return page.wp_get_recent_changes_from_cache(config_agent = config_agent,
+                                                         tpl_render = tpl_render,
+                                                         req_path = req_path,
+                                                         limit = limit,
+                                                         offset = offset)
         elif req_path == "~all":
-            return page.wp_get_all_pages(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path,
+            return page.wp_get_all_pages(config_agent = config_agent,
+                                         tpl_render = tpl_render,
+                                         req_path = req_path,
                                          limit = limit, offset = offset)
         elif req_path == "~settings":
-            return page.wp_view_settings(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
-
+            return page.wp_view_settings(config_agent = config_agent,
+                                         tpl_render = tpl_render,
+                                         req_path = req_path)
         elif req_path == "~stat":
-            return page.wp_stat(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
-
+            return page.wp_stat(config_agent = config_agent,
+                                tpl_render = tpl_render,
+                                req_path = req_path)
         elif req_path == "~new":
-            return page.wp_new(config_agent = config_agent, tpl_render = tpl_render, req_path = req_path)
-
+            return page.wp_new(config_agent = config_agent,
+                               tpl_render = tpl_render,
+                               req_path = req_path)
+        elif req_path == "~atom":
+            buf = atom_output.generate_feed(config_agent = config_agent, req_path = req_path, tpl_render = tpl_render)
+            web.header("Content-Type", "text/xml; charset=utf-8")
+            return buf
         else:
             return web.BadRequest()
 
@@ -251,7 +267,6 @@ def fix_pages_path_symlink(proj_root_full_path):
         os.symlink(src_full_path, dst_full_path)
 
 def main(instance_root_full_path):
-    web.config.debug = config_agent.config.getboolean("main", "debug")
     web.config.static_path = config_agent.get_full_path("paths", "static_path")
 
     fix_pages_path_symlink(instance_root_full_path)

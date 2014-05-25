@@ -105,10 +105,13 @@ def wp_read(config_agent, tpl_render, req_path):
         button_path = None
         view_settings["show_quick_links"] = False
 
+    title = ""
     if os.path.isfile(local_full_path):
         # os.path.exists(local_full_path)
         buf = commons.shutils.cat(local_full_path)
         buf = commons.strutils.strip_bom(buf)
+
+        title = mdutils.get_title_by_file_path_in_md(folder_pages_full_path = folder_pages_full_path, file_path_suffix = local_full_path)
 
     elif os.path.isdir(local_full_path):
         # os.path.exists(local_full_path)
@@ -125,18 +128,24 @@ def wp_read(config_agent, tpl_render, req_path):
             # listdir /path/to/folder/*
             buf = shell.get_page_file_list_by_req_path(folder_pages_full_path = folder_pages_full_path, req_path = req_path)
             if buf:
-                buf = mdutils.sequence_to_unorder_list(buf.split("\n"), **view_settings)
+                buf = mdutils.sequence_to_unorder_list(folder_pages_full_path = folder_pages_full_path,
+                                                       seq = buf.split("\n"),
+                                                       **view_settings)
+                title = req_path
             else:
                 buf = "folder `%s` exists, but there is no files" % path_info
     else:
         # not os.path.exists(local_full_path)
-        if path_info.endswith("/"):
-            fixed_req_path = path_info + "index?action=update"
+        readonly = config_agent.config.get("main", "readonly")
+        if readonly:
+            raise web.Forbidden()
         else:
-            fixed_req_path = path_info + "?action=update"
-        return web.seeother(fixed_req_path)
+            if path_info.endswith("/"):
+                fixed_req_path = path_info + "index?action=update"
+            else:
+                fixed_req_path = path_info + "?action=update"
+            return web.seeother(fixed_req_path)
 
-    title = mdutils.get_title_from_md(local_full_path = local_full_path)
     content = mdutils.md2html(config_agent = config_agent,
                               req_path = req_path,
                               text = buf,
@@ -357,16 +366,26 @@ def wp_new(config_agent, req_path, tpl_render):
 
 
 def get_view_settings(config_agent, simple = False):
+    """ Deprecated """
     theme_name = config_agent.config.get("frontend", "theme_name")
 
     c_fp = config_agent.config.get("frontend", "show_full_path")
-    show_full_path = int(web.cookies().get("zw_show_full_path", c_fp))
+    try:
+        show_full_path = int(web.cookies().get("zw_show_full_path", c_fp))
+    except AttributeError:
+        show_full_path = c_fp
 
     c_toc = config_agent.config.getboolean("frontend", "auto_toc")
-    auto_toc = int(web.cookies().get("zw_auto_toc", c_toc))
+    try:
+        auto_toc = int(web.cookies().get("zw_auto_toc", c_toc))
+    except AttributeError:
+        auto_toc = c_toc
 
     c_hc = config_agent.config.get("frontend", "highlight_code")
-    highlight_code = int(web.cookies().get("zw_highlight", c_hc))
+    try:
+        highlight_code = int(web.cookies().get("zw_highlight", c_hc))
+    except AttributeError:
+        highlight_code = c_hc
 
     reader_mode = config_agent.config.getboolean("frontend", "reader_mode")
 
@@ -419,7 +438,9 @@ def wp_get_all_pages(config_agent, tpl_render, req_path, limit, offset):
     end = start + limit
     lines = all_lines[start:end]
 
-    buf = mdutils.sequence_to_unorder_list(lines, **view_settings)
+    buf = mdutils.sequence_to_unorder_list(folder_pages_full_path = folder_pages_full_path,
+                                           seq = lines,
+                                           **view_settings)
     content = mdutils.md2html(config_agent = config_agent,
                               req_path = req_path, text = buf,
                               static_file_prefix = static_file_prefix,
@@ -462,7 +483,9 @@ def wp_get_recent_changes_from_cache(config_agent, tpl_render, req_path, limit, 
     end = start + limit
     lines = all_lines[start : end]
 
-    buf = mdutils.sequence_to_unorder_list(lines, **view_settings)
+    buf = mdutils.sequence_to_unorder_list(folder_pages_full_path = folder_pages_full_path,
+                                           seq = lines,
+                                           **view_settings)
     content = mdutils.md2html(config_agent = config_agent,
                               req_path = req_path,
                               text = buf,
@@ -506,7 +529,9 @@ def wp_search(config_agent, tpl_render, req_path):
         lines = search.search_by_filename_and_file_content(keywords,
                                                           limit = limit)
         if lines:
-            buf = mdutils.sequence_to_unorder_list(seq = lines, **view_settings)
+            buf = mdutils.sequence_to_unorder_list(folder_pages_full_path = folder_pages_full_path,
+                                                   seq = lines,
+                                                   **view_settings)
         else:
             buf = None
     else:

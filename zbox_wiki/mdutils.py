@@ -255,49 +255,7 @@ def md2html(config_agent, req_path, text, static_file_prefix, **view_settings):
     return buf
 
 
-def test_path2hierarchy():
-    for i in [
-        ("/", [("index", "/~index")]), # name, link pairs
-
-        ("/system-management/gentoo/abc",
-         [("system-management", "/system-management"),("gentoo", "/system-management/gentoo"),("abc", "/system-management/gentoo/abc"),]),
-
-        ("/programming-language",
-         [("programming-language", "/programming-language"),]),
-
-        ("/programming-language/",
-         [("programming-language", "/programming-language"),]),
-                                       ]:
-        req_path = i[0]
-        links = i[1]
-        assert path2hierarchy(req_path) == links
-
-
-
 def req_path_to_local_full_path(req_path, folder_pages_full_path):
-    """
-    >>> folder_pages_full_path = "/tmp/pages/"
-    >>> req_path_to_local_full_path("sandbox1", folder_pages_full_path)
-    '/tmp/pages/sandbox1.md'
-
-    >>> req_path_to_local_full_path("sandbox1/", folder_pages_full_path)
-    '/tmp/pages/sandbox1/'
-
-    >>> req_path_to_local_full_path("hacking/fetion/fetion-protocol/", folder_pages_full_path)
-    '/tmp/pages/hacking/fetion/fetion-protocol/'
-
-    >>> req_path_to_local_full_path("hacking/fetion/fetion-protocol/method-option.md", folder_pages_full_path)
-    '/tmp/pages/hacking/fetion/fetion-protocol/method-option.md'
-
-    >>> req_path_to_local_full_path("~all", folder_pages_full_path)
-    '/tmp/pages/'
-
-    >>> req_path_to_local_full_path("/", folder_pages_full_path)
-    '/tmp/pages/'
-
-    >>> req_path_to_local_full_path("", folder_pages_full_path)
-    '/tmp/pages/'
-    """
     req_path = web.rstrips(req_path, ".md")
     req_path = web.rstrips(req_path, ".markdown")
 
@@ -326,7 +284,20 @@ def req_path_to_local_full_path(req_path, folder_pages_full_path):
         return os.path.join(folder_pages_full_path, req_path)
 
 
-def get_title_from_md(local_full_path):
+def get_title_by_file_path_in_md(folder_pages_full_path, file_path_suffix):
+    prefix = os.path.join(folder_pages_full_path, file_path_suffix)
+    a = prefix + ".md"
+    b = prefix + ".markdown"
+
+    if os.path.exists(prefix):
+        local_full_path = prefix
+    elif os.path.exists(a):
+        local_full_path = a
+    elif os.path.exists(b):
+        local_full_path =  b
+    else:
+        return None
+
     buf = commons.shutils.cat(local_full_path)
     if buf:
         buf = commons.strip_bom(buf)
@@ -341,9 +312,9 @@ def get_title_from_md(local_full_path):
         title = None
     return title
 
-def sequence_to_unorder_list(seq, **view_settings):
+def sequence_to_unorder_list(folder_pages_full_path, seq, **view_settings):
     """
-        >>> sequence_to_unorder_list(['a','b','c'], show_full_path = 1)
+        >>> sequence_to_unorder_list("", ['a','b','c'], show_full_path = 1)
         u'- [a](/a)\\n- [b](/b)\\n- [c](/c)'
     """
     lis = []
@@ -354,7 +325,8 @@ def sequence_to_unorder_list(seq, **view_settings):
 
         name, url = stripped_name, "/" + stripped_name
         if not view_settings["show_full_path"]:
-            buf = get_title_from_md(name)
+            file_path_suffix = name
+            buf = get_title_by_file_path_in_md(folder_pages_full_path, file_path_suffix)
             if buf is None:
                 name = name.split('/')[-1].replace('-', ' ').title()
             else:
@@ -385,10 +357,12 @@ def macro_zw2md_ls(text, folder_pages_full_path, **view_settings):
             max_depth = int(m.group("maxdepth"))
 
             if os.path.exists(full_path):
-                buf = shell.get_page_file_list_by_req_path(req_path = req_path,
-                                                          max_depth = max_depth,
-                                                          folder_pages_full_path = folder_pages_full_path)
-                buf = sequence_to_unorder_list(buf.split("\n"), **view_settings)
+                buf = shell.get_page_file_list_by_req_path(folder_pages_full_path = folder_pages_full_path,
+                                                           req_path = req_path,
+                                                           max_depth = max_depth)
+                buf = sequence_to_unorder_list(folder_pages_full_path = folder_pages_full_path,
+                                               seq = buf.split("\n"),
+                                               **view_settings)
             else:
                 buf = ""
             return buf

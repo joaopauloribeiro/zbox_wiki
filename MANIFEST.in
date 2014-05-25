@@ -1,3 +1,4 @@
+include zbox_wiki/nginx-debian.conf
 include zbox_wiki/default.cfg
 include zbox_wiki/pages/Kubuntu-logo.png
 include zbox_wiki/pages/robots.txt
@@ -7,6 +8,7 @@ include zbox_wiki/pages/zbox-wiki/nginx-*.conf
 include zbox_wiki/pages/zbox-wiki_zh_CN/*.md
 include zbox_wiki/scripts/*.py
 include zbox_wiki/scripts/*.sh
+include zbox_wiki/static/favicon.ico
 include zbox_wiki/static/default/css/*.css
 include zbox_wiki/static/default/js/*.js
 include zbox_wiki/static/default/js/prettify/*.js

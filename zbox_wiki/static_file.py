@@ -1,4 +1,10 @@
+import logging
 import os
+
+import commons
+
+
+logging.getLogger("static_file").setLevel(logging.DEBUG)
 
 
 def append_static_file(text, file_path, file_type, add_newline=False):
@@ -67,19 +73,36 @@ def get_global_static_files(**view_settings):
 
 def get_folder_static_full_path(config_agent):
     folder_static_name = config_agent.config.get("paths", "static_path")
-    folder_pages_name = config_agent.config.get("paths", "pages_path")
-    path = "/%s/%s" % (folder_static_name, folder_pages_name)
+
+    if os.path.isabs(folder_static_name):
+        path = folder_static_name
+    else:
+        folder_pages_name = config_agent.config.get("paths", "pages_path")
+        path = "/%s/%s" % (folder_static_name, folder_pages_name)
+
     return path
 
 def get_static_file_prefix_by_local_full_path(config_agent, local_full_path, req_path):
-    prefix = get_folder_static_full_path(config_agent)
+    folder_static_name = config_agent.config.get("paths", "static_path")
+    components = []
 
-#    if req_path in consts.g_special_paths:
-#        return prefix
+    if os.path.isfile(folder_static_name):
+        chunk = os.path.basename(folder_static_name)
+        components.append(chunk)
+    elif isinstance(folder_static_name, basestring):
+        chunk = folder_static_name
+        components.append(chunk)
+
+    folder_pages_name = config_agent.config.get("paths", "pages_path")
+    chunk = os.path.basename(folder_pages_name)
+    components.append(chunk)
+
     if os.path.isdir(local_full_path):
-        return os.path.join(prefix, req_path)
+        components.append(req_path)
     elif os.path.isfile(local_full_path):
-        suffix = os.path.dirname(req_path)
-        return os.path.join(prefix, suffix)
+        chunk = os.path.dirname(req_path)
+        components.append(chunk)
+
+    prefix = '/' + '/'.join(components)
 
     return prefix

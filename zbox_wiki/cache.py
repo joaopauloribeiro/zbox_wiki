@@ -3,7 +3,6 @@ from __future__ import with_statement
 import os
 import time
 
-import page
 import shell
 import web
 
@@ -56,3 +55,4 @@ def get_all_pages_list_from_cache(config_agent):
         buf = f.read()
 
     return web.utils.safeunicode(buf)
+

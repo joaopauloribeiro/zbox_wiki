@@ -1,0 +1,7 @@
+## PROPOSAL
+
+redirect to /path/to/index if /path/to/ not exists
+
+fix zwadmin --create action while pages not exists
+
+ - parsing URLs from text
